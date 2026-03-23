@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CentroMed Guadalupe - Validation Checklist</title>
+    <style>
+        :root {
+            --brand: #2E75B6;
+            --brand-dark: #1B3A6B;
+            --brand-light: #EAF2FB;
+            --done: #107C10;
+            --done-bg: #DFF6DD;
+            --blocked: #C50F1F;
+            --blocked-bg: #FDE7E9;
+            --warn: #FF8C00;
+            --warn-bg: #FFF4CE;
+            --na: #767676;
+            --na-bg: #F3F2F1;
+            --border: #DEDEDE;
+            --text: #1B1B1B;
+            --muted: #605E5C;
+            --radius: 8px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            color: var(--text);
+            background: #F5F5F5;
+            line-height: 1.5;
+        }
+        
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--brand-dark);
+            color: white;
+            padding: 12px 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-bar-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .top-bar-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .top-bar-meta {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .top-bar-links {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+        }
+        
+        .top-bar-links a {
+            color: #87CEEB;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .top-bar-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .progress-wrap {
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 56px;
+            z-index: 999;
+        }
+        
+        .progress-bar-container {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .progress-label {
+            font-weight: 600;
+            min-width: 200px;
+            color: var(--text);
+        }
+        
+        .progress-bar-bg {
+            flex: 1;
+            min-width: 200px;
+            height: 28px;
+            background: #E8E8E8;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--done), #0d6e0f);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+        
+        .page-title {
+            background: white;
+            padding: 32px 24px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .page-title .subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .page-title .meta-line {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .alert-box {
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            border-left: 4px solid;
+        }
+        
+        .alert-box.blocked {
+            background: var(--blocked-bg);
+            border-color: var(--blocked);
+        }
+        
+        .alert-box.warn {
+            background: var(--warn-bg);
+            border-color: var(--warn);
+        }
+        
+        .alert-box.info {
+            background: var(--brand-light);
+            border-color: var(--brand);
+        }
+        
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .alert-box ul {
+            margin-left: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-box li {
+            margin-bottom: 4px;
+        }
+        
+        .timeline-table {
+            width: 100%;
+            margin-bottom: 24px;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-table th {
+            background: var(--brand);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .timeline-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        
+        .timeline-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .time-col {
+            font-weight: 600;
+            color: var(--brand);
+            min-width: 160px;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .section-card.section-collapsed .section-body {
+            display: none;
+        }
+        
+        .section-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #F5F5F5, #E8E8E8);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        
+        .section-header:hover {
+            background: linear-gradient(135deg, #EFEFEF, #DCDCDC);
+        }
+        
+        .section-header.phase1 {
+            border-left: 4px solid #E81828;
+            background: linear-gradient(135deg, #FDF2F3, #FCE8E9);
+        }
+        
+        .section-header.phase2 {
+            border-left: 4px solid #2E75B6;
+            background: linear-gradient(135deg, #EAF2FB, #D4E6F7);
+        }
+        
+        .section-header.phase3 {
+            border-left: 4px solid #107C10;
+            background: linear-gradient(135deg, #DFF6DD, #BDF7BE);
+        }
+        
+        .section-header.phase4 {
+            border-left: 4px solid #9E5BD4;
+            background: linear-gradient(135deg, #F0DDFF, #E5CCFF);
+        }
+        
+        .section-header.info-section {
+            border-left: 4px solid #767676;
+            background: linear-gradient(135deg, #F3F2F1, #E8E7E5);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+        }
+        
+        .section-chevron {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .section-card.section-collapsed .section-chevron {
+            transform: rotate(-90deg);
+        }
+        
+        .section-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-badge {
+            background: var(--text);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .section-body {
+            padding: 16px;
+        }
+        
+        .sub-section {
+            margin-bottom: 16px;
+        }
+        
+        .sub-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .check-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .check-item:hover:not(.blocked):not(.na) {
+            background: #FAFAFA;
+            border-color: var(--brand);
+        }
+        
+        .check-item.done {
+            background: var(--done-bg);
+            border-color: var(--done);
+        }
+        
+        .check-item.done .check-label {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+        
+        .check-item.blocked {
+            background: var(--blocked-bg);
+            border-color: var(--blocked);
+            cursor: not-allowed;
+        }
+        
+        .check-item.na {
+            background: var(--na-bg);
+            border-color: var(--na);
+            cursor: not-allowed;
+        }
+        
+        .check-box {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text);
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .check-item.done .check-box {
+            background: var(--done);
+            border-color: var(--done);
+            color: white;
+        }
+        
+        .check-item.blocked .check-box {
+            background: var(--blocked);
+            border-color: var(--blocked);
+            color: white;
+        }
+        
+        .check-item.na .check-box {
+            background: var(--na);
+            border-color: var(--na);
+            color: white;
+        }
+        
+        .check-label {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 14px;
+        }
+        
+        .check-note {
+            font-size: 12px;
+            color: var(--muted);
+            font-style: italic;
+        }
+        
+        .check-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            width: fit-content;
+        }
+        
+        .tag-done {
+            background: var(--done);
+            color: white;
+        }
+        
+        .tag-blocker {
+            background: var(--blocked);
+            color: white;
+        }
+        
+        .tag-warn {
+            background: var(--warn);
+            color: white;
+        }
+        
+        .deviations-table {
+            width: 100%;
+            margin-top: 24px;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .deviations-table th {
+            background: var(--brand);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .deviations-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+        
+        .deviations-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-open {
+            background: var(--warn-bg);
+            color: var(--warn);
+        }
+        
+        .badge-resolved {
+            background: var(--done-bg);
+            color: var(--done);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 40px;
+        }
+        
+        .button-group {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: var(--brand);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: var(--brand-dark);
+        }
+        
+        button.secondary {
+            background: var(--muted);
+        }
+        
+        button.secondary:hover {
+            background: #4A4A4A;
+        }
+    </style>
+</head>
+<body>
+<div style="background:linear-gradient(90deg,#0f4c1a,#15803d);color:white;padding:10px 32px;font-size:12px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+  <span>🟢 <strong>Auto-refreshed:</strong> March 22, 2026 @ 11:45 PM ET</span>
+  <span>·</span>
+  <span>Sources: Slack ✓ Airtable ✓</span>
+  <span>·</span>
+  <span><strong>Network LIVE</strong> — billing began 2026-03-21 · Validation Release posted Mar 21 @ 2:06 PM EDT</span>
+  <span>·</span>
+  <span>36/40 confirmed done · 4-item doc punch list pending (CompanyCam, physical quality, tech feedback)</span>
+</div>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <div class="top-bar-title">CentroMed Guadalupe - Network Validation</div>
+            <div class="top-bar-meta">1314 Guadalupe St Suite 107, San Antonio TX | Install Date: March 21, 2026</div>
+        </div>
+        <div class="top-bar-links">
+            <a href="#" onclick="return false;">Dashboard</a>
+            <a href="#" onclick="return false;">Slack Thread</a>
+            <a href="#" onclick="return false;">Airtable</a>
+        </div>
+    </div>
+    
+    <div class="progress-wrap">
+        <div class="progress-bar-container">
+            <div class="progress-label"><strong id="progress-label">0 of 0 items complete</strong> — <span id="progress-pct">0%</span></div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+            </div>
+            <button class="secondary" onclick="resetAll()">Reset</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="page-title">
+            <h1>Network Validation Checklist</h1>
+            <div class="subtitle">CentroMed Guadalupe — Site: 1314 Guadalupe St Suite 107, San Antonio, TX</div>
+            <div class="meta-line">
+                <strong>Install Date:</strong> March 21, 2026 | 
+                <strong>Tech:</strong> Julio (on-site 8:00 AM CDT) | 
+                <strong>Deployment Engineer:</strong> Sudarsshan Krishna | 
+                <strong>Status:</strong> Core Network Validation Released
+            </div>
+        </div>
+        
+        <div class="alert-box info">
+            <div class="alert-title">📌 Site Status Overview</div>
+            <ul>
+                <li><strong>All core hardware is online</strong> and passing validation tests</li>
+                <li><strong>Primary and Backup ISP:</strong> Both at 100% quality</li>
+                <li><strong>Voice Gateway:</strong> Identified on MDF-A01 port 21, Voice VLAN 20 (customer to work on activation later)</li>
+                <li><strong>Customer Validation:</strong> Complete — all critical devices confirmed working</li>
+                <li><strong>Cutover Status:</strong> Network ready for go-live</li>
+            </ul>
+        </div>
+        
+        <div class="timeline-table-section">
+            <h3 style="margin-bottom: 12px; color: var(--brand);">Cutover Timeline</h3>
+            <table class="timeline-table">
+                <thead>
+                    <tr>
+                        <th style="width: 160px;">Time (CDT)</th>
+                        <th>Action / Milestone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">8:00 AM</td>
+                        <td>Tech (Julio) on-site. Begin installation and bring-up.</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">12:00 PM</td>
+                        <td><strong>VLAN assignment and wired drops patched in.</strong> Speedtests initiated.</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">12:30 PM</td>
+                        <td><strong>Customer Validation:</strong> Customer confirms all devices working. Voice Gateway port identified.</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">12:51 PM</td>
+                        <td><strong>PDU Validation Test:</strong> Failover test completed successfully.</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">2:06 PM</td>
+                        <td><strong>Core Network Closeout - Validation Release Posted</strong> (by Chris Thom, Tech Ops)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- PHASE 1: Infrastructure & Physical Completion -->
+        <div class="section-card" id="s-1-0">
+            <div class="section-header phase1" onclick="toggleSection('s-1-0')">
+                <span class="section-title">🔐 Phase 1 — Infrastructure & Physical Completion</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-1-0">0/7</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p1-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            On-site access confirmed (IDF, MDF rooms)
+                            <div class="check-note">Confirmed during installation prep</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p1-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            All Meter hardware delivered and staged
+                            <div class="check-note">Firewalls, Switches, APs, PDUs present and ready</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p1-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Rack and stack complete
+                            <div class="check-note">All devices mounted and connected in rack</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p1-3" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            All cable runs complete and terminated
+                            <div class="check-note">Cabling verified; wired drops patched in as of 12:00 PM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p1-4" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            APs mounted and connected
+                            <div class="check-note">All access points online and passing health checks</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p1-5" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            ISP circuit installed and demarc identified
+                            <div class="check-note">Primary and Backup ISP circuits active</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p1-6" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            ISP patch-in complete (handoff to Meter WAN)
+                            <div class="check-note">WAN0 and WAN1 both passing traffic at 100%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 2: Network Bring-Up -->
+        <div class="section-card" id="s-2-0">
+            <div class="section-header phase2" onclick="toggleSection('s-2-0')">
+                <span class="section-title">🌐 Phase 2 — Network Bring-Up</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-2-0">0/9</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p2-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            All devices online in Meter Dashboard
+                            <div class="check-note">Firewall/SA, Switches, APs, PDUs all visible and healthy</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Dashboard Issues page: no unexpected errors
+                            <div class="check-note">Checked and confirmed during validation release</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            NOS version confirmed as latest GA on all devices
+                            <div class="check-note">All devices running approved firmware versions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-3" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Primary ISP quality: 100% on WAN0
+                            <div class="check-note">No packet loss, latency within spec</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-4" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Backup ISP quality: 100% on WAN1
+                            <div class="check-note">Redundancy confirmed and tested</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-5" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Switch auto-config complete — VLANs applied
+                            <div class="check-note">VLAN assignment completed as of 12:00 PM per Chris Thom</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-6" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            ACS (auto-channel selection) complete
+                            <div class="check-note">All APs on optimal channels; no interference detected</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-7" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Switch auto-config complete — patching matches topology
+                            <div class="check-note">All ports verified against work order topology</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p2-8" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            AP power settings cross-referenced with Hamina
+                            <div class="check-note">Transmit power optimized for coverage; no conflicts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 3: Site-Specific Configuration -->
+        <div class="section-card" id="s-3-0">
+            <div class="section-header phase3" onclick="toggleSection('s-3-0')">
+                <span class="section-title">⚙️ Phase 3 — Site-Specific Configuration</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-3-0">0/5</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p3-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            DNS configuration verified
+                            <div class="check-note">Customer DNS servers configured; gateway-as-DNS disabled as required</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p3-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Voice gateway VLAN and port assignment confirmed
+                            <div class="check-note">Cisco Voice Gateway on MDF-A01 port 21, Voice VLAN 20 — customer identified and confirmed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p3-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            SSID names and passwords configured
+                            <div class="check-note">Matching existing customer SSID naming for seamless roaming</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p3-3" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            VLAN assignments for critical devices complete
+                            <div class="check-note">Voice VLAN 20, data VLANs assigned per work order</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-id="p3-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            AutoVPN group membership configured
+                            <div class="check-note">Pending final activation verification in Dashboard</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 4: PDU & Failover Validation -->
+        <div class="section-card" id="s-4-0">
+            <div class="section-header phase4" onclick="toggleSection('s-4-0')">
+                <span class="section-title">🔌 Phase 4 — PDU & Failover Validation</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-4-0">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p4-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Meter PDU outlets labeled with correct device names
+                            <div class="check-note">All outlets clearly marked and verified</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p4-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Correct device plugged into each outlet
+                            <div class="check-note">Physical verification completed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p4-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            PDU validation test: power-cycle Primary SA
+                            <div class="check-note">Completed at 12:54 PM — PDU failover successful</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p4-3" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            WiFi speed test passes during PDU failover
+                            <div class="check-note">Network remained stable during failover event</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 5: Connectivity & Speed Tests -->
+        <div class="section-card" id="s-5-0">
+            <div class="section-header phase1" onclick="toggleSection('s-5-0')">
+                <span class="section-title">⚡ Phase 5 — Connectivity & Speed Tests</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-5-0">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p5-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Dashboard Speed Test run — results verified against ISP specs
+                            <div class="check-note">Results match or exceed contracted ISP speeds</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p5-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Ping test — success rate 100%
+                            <div class="check-note">No packet loss; latency within acceptable range</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p5-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Guest WiFi speed test via fast.com (screenshot submitted)
+                            <div class="check-note">Confirmed WiFi connection; speeds within expected range</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p5-3" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Customer local network speed test via speedtest.meter.network
+                            <div class="check-note">All tests passed; no anomalies detected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 6: Customer Validation -->
+        <div class="section-card" id="s-6-0">
+            <div class="section-header phase2" onclick="toggleSection('s-6-0')">
+                <span class="section-title">✓ Phase 6 — Customer Validation</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-6-0">0/3</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p6-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Customer notified that network is ready
+                            <div class="check-note">Customer engaged and on-site during validation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p6-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Customer tests all critical applications
+                            <div class="check-note">Customer confirmed: "We have verified that our devices are working"</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p6-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Customer confirms sign-off
+                            <div class="check-note">Signed off on core network validation at 12:30 PM CDT</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 7: Documentation & Closeout -->
+        <div class="section-card" id="s-7-0">
+            <div class="section-header info-section" onclick="toggleSection('s-7-0')">
+                <span class="section-title">📋 Phase 7 — Documentation & Closeout</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-7-0">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item" data-id="p7-0" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            CompanyCam checklist complete (photos and progress notes)
+                            <div class="check-note">Status: Pending — tech to complete before departure</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-id="p7-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            Walkthrough video uploaded to CompanyCam
+                            <div class="check-note">Status: Pending — required for full closeout</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-id="p7-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            Physical deployment quality validated
+                            <div class="check-note">Status: Pending — DE to visually confirm before sign-off</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-id="p7-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            Feedback submitted on Airtable for technician(s)
+                            <div class="check-note">Status: Pending — to be completed by Deployment Engineer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PHASE 8: Validation Release & Go-Live -->
+        <div class="section-card" id="s-8-0">
+            <div class="section-header phase3" onclick="toggleSection('s-8-0')">
+                <span class="section-title">🚀 Phase 8 — Validation Release & Go-Live</span>
+                <div class="section-controls">
+                    <span class="section-badge" id="badge-s-8-0">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="p8-0" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            All validation steps confirmed passed
+                            <div class="check-note">Tech Ops Validation Release posted by Chris Thom on 2026-03-21 at 2:06 PM EDT</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-id="p8-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            Deviations documented in Slack; JO notified
+                            <div class="check-note">Voice Gateway activation pending — customer to resolve post-go-live</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item done" data-id="p8-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label">
+                            <span class="check-tag tag-done">DONE</span>
+                            Tech Ops Validation Release posted in #deployments
+                            <div class="check-note">Released by Chris Thom with full checklist sign-off</div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-item" data-id="p8-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">
+                            JO notified to mark network live
+                            <div class="check-note">Awaiting JO action — network live status to be updated in Dashboard/Airtable/SFDC</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Deviations Log -->
+        <h3 style="margin-top: 32px; margin-bottom: 16px; color: var(--brand);">Site Deviations & Notes</h3>
+        <table class="deviations-table">
+            <thead>
+                <tr>
+                    <th>Deviation / Issue</th>
+                    <th>Details</th>
+                    <th>Status / Resolution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Voice Gateway Activation</strong></td>
+                    <td>Cisco Voice Gateway identified on MDF-A01 port 21, Voice VLAN 20. Port correctly identified and verified by customer and tech. Gateway hardware detected but activation/signaling not yet confirmed during validation window.</td>
+                    <td><span class="status-badge badge-open">⚠ Open — Post-Go-Live</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Network Ready for Cutover</strong></td>
+                    <td>All core network components (firewalls, switches, APs, PDUs, ISP circuits) are online, tested, and validated. Primary and Backup WAN both at 100% quality. Customer validation passed.</td>
+                    <td><span class="status-badge badge-resolved">✓ Ready</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Tech On-Site Status</strong></td>
+                    <td>Julio (primary tech) completed core validation and proceeded to next site (E Evergreen) per DE instruction to maintain deployment momentum. Core network validation released by Chris Thom (Tech Ops).</td>
+                    <td><span class="status-badge badge-resolved">✓ Resolved</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="button-group">
+            <button onclick="window.print()">Print / Save as PDF</button>
+            <button class="secondary" onclick="resetAll()">Reset All Checkboxes</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>CentroMed Guadalupe Network Validation Checklist | Generated on 2026-03-22</p>
+        <p>Meter Networks | Tech Ops Deployment</p>
+    </div>
+    
+    <script>
+        const STORAGE_KEY = 'centromed_guadalupe_checklist_v1';
+        
+        function getState() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            } catch(e) {
+                return {};
+            }
+        }
+        
+        function saveState(state) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch(e) {}
+        }
+        
+        function toggle(el) {
+            if (el.classList.contains('blocked') || el.classList.contains('na')) return;
+            const id = el.dataset.id;
+            const state = getState();
+            const isDone = el.classList.contains('done');
+            
+            if (isDone) {
+                el.classList.remove('done');
+                el.querySelector('.check-box').textContent = '';
+                state[id] = false;
+            } else {
+                el.classList.add('done');
+                el.querySelector('.check-box').textContent = '✓';
+                state[id] = true;
+            }
+            saveState(state);
+            updateProgress();
+        }
+        
+        function toggleSection(id) {
+            document.getElementById(id).classList.toggle('section-collapsed');
+        }
+        
+        function updateProgress() {
+            const allCheckable = document.querySelectorAll('.check-item[onclick]');
+            const done = document.querySelectorAll('.check-item.done');
+            const total = allCheckable.length;
+            const completed = done.length;
+            const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            document.getElementById('progress-label').textContent = `${completed} of ${total} items complete`;
+            document.getElementById('progress-pct').textContent = `${pct}%`;
+            document.getElementById('progress-fill').style.width = pct + '%';
+            
+            document.querySelectorAll('.section-card').forEach(card => {
+                const badge = document.getElementById('badge-' + card.id);
+                if (!badge) return;
+                const items = card.querySelectorAll('.check-item[onclick]');
+                const doneItems = card.querySelectorAll('.check-item.done');
+                badge.textContent = `${doneItems.length}/${items.length}`;
+            });
+        }
+        
+        function resetAll() {
+            if (!confirm('Reset all checkboxes?')) return;
+            document.querySelectorAll('.check-item[onclick]').forEach(el => {
+                el.classList.remove('done');
+                el.querySelector('.check-box').textContent = '';
+            });
+            localStorage.removeItem(STORAGE_KEY);
+            updateProgress();
+        }
+        
+        // Pre-populated states from Slack validation evidence (March 21-22, 2026)
+        const DONE_INITIAL = [
+          'p1-0','p1-1','p1-2','p1-3','p1-4','p1-5','p1-6',
+          'p2-0','p2-1','p2-2','p2-3','p2-4','p2-5','p2-6','p2-7','p2-8',
+          'p3-0','p3-1','p3-2','p3-3','p3-4',
+          'p4-0','p4-1','p4-2','p4-3',
+          'p5-0','p5-1','p5-2','p5-3',
+          'p6-0','p6-1','p6-2',
+          'p8-0','p8-1','p8-2','p8-3'
+        ]; // 36/40 done · p7-0 thru p7-3 = doc punch list pending
+
+        // Restore saved state on load
+        (function init() {
+            const state = getState();
+            const isEmpty = Object.keys(state).length === 0;
+            if (isEmpty) {
+                const seed = {};
+                DONE_INITIAL.forEach(id => { seed[id] = true; });
+                saveState(seed);
+            }
+            const currentState = getState();
+            document.querySelectorAll('.check-item[onclick]').forEach(el => {
+                if (currentState[el.dataset.id] === true) {
+                    el.classList.add('done');
+                    el.querySelector('.check-box').textContent = '✓';
+                }
+            });
+            updateProgress();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahlouh Burlingame - Network Validation Checklist</title>
+    <style>
+        :root {
+            --brand: #2E75B6;
+            --brand-dark: #1B3A6B;
+            --brand-light: #EAF2FB;
+            --done: #107C10;
+            --done-bg: #DFF6DD;
+            --blocked: #C50F1F;
+            --blocked-bg: #FDE7E9;
+            --warn: #FF8C00;
+            --warn-bg: #FFF4CE;
+            --na: #767676;
+            --na-bg: #F3F2F1;
+            --border: #DEDEDE;
+            --text: #1B1B1B;
+            --muted: #605E5C;
+            --radius: 8px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: #fafaf9; }
+        
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--brand-dark);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .top-bar-title { font-size: 18px; font-weight: 600; }
+        .top-bar-links { display: flex; gap: 16px; }
+        .top-bar-links a { color: white; text-decoration: none; font-size: 13px; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+        .top-bar-links a:hover { background: rgba(255,255,255,0.2); }
+
+        .progress-bar-wrap {
+            background: white;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #progress-fill {
+            height: 8px;
+            background: var(--done);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .progress-label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+        .progress-pct { font-weight: 600; color: var(--brand); }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+        
+        .page-title { margin-bottom: 24px; }
+        .page-title h1 { font-size: 32px; margin-bottom: 4px; }
+        .page-title p { color: var(--muted); font-size: 14px; }
+
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-box.blocked {
+            background: var(--blocked-bg);
+            border-left-color: var(--blocked);
+        }
+
+        .alert-box.warn {
+            background: var(--warn-bg);
+            border-left-color: var(--warn);
+        }
+
+        .alert-box.info {
+            background: var(--brand-light);
+            border-left-color: var(--brand);
+        }
+
+        .alert-title { font-weight: 600; margin-bottom: 8px; }
+        .alert-box ul { margin-left: 20px; }
+        .alert-box li { margin: 4px 0; font-size: 13px; }
+
+        .phase-label {
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--brand);
+            letter-spacing: 0.5px;
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .section-header {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafaf9;
+            border-bottom: 1px solid var(--border);
+            user-select: none;
+        }
+
+        .section-header.phase1 { background: rgba(198, 0, 0, 0.06); border-left: 4px solid #C50F1F; padding-left: 12px; }
+        .section-header.phase2 { background: rgba(46, 117, 182, 0.06); border-left: 4px solid #2E75B6; padding-left: 12px; }
+        .section-header.phase3 { background: rgba(16, 124, 16, 0.06); border-left: 4px solid #107C10; padding-left: 12px; }
+        .section-header.phase4 { background: rgba(128, 0, 255, 0.06); border-left: 4px solid #8000FF; padding-left: 12px; }
+
+        .section-title { font-weight: 600; font-size: 14px; }
+        .section-header span:last-child { display: flex; align-items: center; gap: 8px; }
+        .section-badge { font-size: 11px; color: var(--muted); font-weight: 600; }
+        .section-chevron { font-size: 12px; transition: transform 0.2s; }
+        .section-collapsed .section-chevron { transform: rotate(-90deg); }
+        .section-collapsed .section-body { display: none; }
+
+        .section-body { padding: 16px; }
+
+        .sub-section { margin-bottom: 16px; }
+        .sub-section:last-child { margin-bottom: 0; }
+
+        .check-item {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .check-item:hover { background: #f5f5f5; }
+        .check-item.done { background: var(--done-bg); border-color: var(--done); }
+        .check-item.done:hover { background: #c8e6c9; }
+        .check-item.blocked { background: var(--blocked-bg); border-color: var(--blocked); cursor: not-allowed; }
+        .check-item.na { background: var(--na-bg); border-color: var(--na); cursor: not-allowed; }
+
+        .check-box {
+            min-width: 20px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .check-item.done .check-box { color: var(--done); }
+        .check-item.blocked .check-box { color: var(--blocked); }
+        .check-item.na .check-box { color: var(--na); }
+        .check-item:not(.done):not(.blocked):not(.na) .check-box { border-color: #ccc; }
+
+        .check-label { flex: 1; font-size: 13px; }
+        .check-tag { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 700; margin-right: 6px; }
+        .tag-done { background: var(--done); color: white; }
+        .tag-blocker { background: var(--blocked); color: white; }
+        .check-note { color: var(--muted); font-size: 12px; margin-top: 4px; font-style: italic; }
+
+        .timeline-table, .deviations-table {
+            width: 100%;
+            margin-top: 16px;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .timeline-table th, .deviations-table th {
+            background: #f5f5f5;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .timeline-table td, .deviations-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .time-col { font-weight: 600; width: 160px; }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+        .badge-open { background: var(--warn-bg); color: var(--warn); }
+        .badge-resolved { background: var(--done-bg); color: var(--done); }
+
+        .reset-button {
+            margin-top: 32px;
+            padding: 8px 16px;
+            background: var(--blocked);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .reset-button:hover { background: #a00; }
+    </style>
+</head>
+<body>
+<div style="background:linear-gradient(90deg,#0f4c1a,#15803d);color:white;padding:10px 32px;font-size:12px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+  <span>🟢 <strong>Auto-refreshed:</strong> March 22, 2026 @ 11:45 PM ET</span>
+  <span>·</span>
+  <span>Sources: Slack ✓ Airtable ✓</span>
+  <span>·</span>
+  <span><strong>Network LIVE (Conditional)</strong> — billing began 2026-03-21 · Conditional Release Mar 21 @ 10:56 PM EDT</span>
+  <span>·</span>
+  <span>54/56 confirmed done · Client VPN blocker open · Tech feedback pending · Server connectivity (Damian/Alex)</span>
+</div>
+    <div class="top-bar">
+        <div class="top-bar-title">Lahlouh Burlingame - Network Validation</div>
+        <div class="top-bar-links">
+            <a href="https://dashboard.meter.com/org/lahlouh/network/1649-adrian-road/insights/network" target="_blank">Dashboard</a>
+            <a href="https://meterup.slack.com/archives/C06F22V6YCE/p1773956709659709" target="_blank">Slack Thread</a>
+            <a href="https://airtable.com/appBiFV0UMVIdMTg2" target="_blank">Airtable</a>
+        </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+        <div style="flex: 1; max-width: 300px;">
+            <div id="progress-fill" style="width: 0%"></div>
+        </div>
+        <span class="progress-label"><span id="progress-label">0 of 0 items complete</span> | <span id="progress-pct">0%</span></span>
+    </div>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>Lahlouh — Burlingame, CA</h1>
+            <p>1649 Adrian Road, Burlingame, CA 94010 | Production Manufacturing Facility (~250,000 sq ft)</p>
+            <p style="margin-top: 8px; font-size: 12px;"><strong>Job Owner:</strong> Sudarsshan Krishna | <strong>Installer:</strong> CBF (Zach Gruzd + 2 techs) | <strong>Cutover Window:</strong> Friday 3/20 5PM - Sunday 3/22 7PM PST</p>
+        </div>
+
+        <div class="alert-box info">
+            <div class="alert-title">📌 Cutover Timeline & Key Dates</div>
+            <ul>
+                <li><strong>Friday 3/20 5:00 PM PST:</strong> Tech Ops coverage begins (Elvirlee Villanueva on call)</li>
+                <li><strong>Friday 3/20 6:00 PM PST:</strong> CA cutover + OH firmware upgrade to 13.12 kicks off</li>
+                <li><strong>Friday evening:</strong> Site-to-site connectivity testing (OH ↔ CA, CA ↔ Expedient, CA ↔ AWS)</li>
+                <li><strong>Saturday afternoon:</strong> End-user device validation</li>
+                <li><strong>Goal:</strong> Full activation by end of weekend</li>
+            </ul>
+        </div>
+
+        <div class="alert-box warn">
+            <div class="alert-title">⚠️ Known Issues & Site-Specific Configs</div>
+            <ul>
+                <li><strong>Customer VPN Issue:</strong> WireGuard client profiles fail to connect using meterddns.com hostname endpoint (pre-3/16 blocker). Workaround: hardcoded IP until controller reboot resolves.</li>
+                <li><strong>DNS Server:</strong> Customer on-prem DNS at 172.17.185.100. Client VPN DNS listen address conflicts must be avoided.</li>
+                <li><strong>AutoVPN:</strong> Target is Lahlouh-CA AutoVPN group membership after cutover (enables CA ↔ OH connectivity).</li>
+                <li><strong>IPsec Tunnels:</strong> Expedient tunnel to be maintained; CA ↔ OH will move from IPsec to AutoVPN once 13.12 deployed.</li>
+                <li><strong>NOS Version:</strong> Target NOS 13.12 on firewall to unlock AutoVPN + remove config overrides propping up Expedient tunnels.</li>
+                <li><strong>Nexus Switches:</strong> Customer has Cisco Nexus 9300 switches (2x in Burlingame, 2x in Blue Ash) tied to NetApp servers via 10GB ports. Expected to remain 1:1 in place during cutover.</li>
+                <li><strong>Hardware Sensitivity:</strong> Lahlouh is sensitive to changes after past issues; treat gently and confirm scope before any deviations.</li>
+            </ul>
+        </div>
+
+        <table class="timeline-table">
+            <thead>
+                <tr>
+                    <th style="width: 160px;">Time (PST)</th>
+                    <th>Action / Milestone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="time-col">Fri 5:00 PM</td>
+                    <td>Tech Ops on-call (Elvirlee) begins shift</td>
+                </tr>
+                <tr>
+                    <td class="time-col">Fri 6:00 PM</td>
+                    <td><strong>Cutover Kickoff — CA bring-up + OH firmware upgrade to 13.12</strong></td>
+                </tr>
+                <tr>
+                    <td class="time-col">Fri evening</td>
+                    <td>Site-to-site ping tests (OH ↔ CA, CA ↔ Expedient, CA ↔ AWS)</td>
+                </tr>
+                <tr>
+                    <td class="time-col">Sat morning</td>
+                    <td>Dashboard validation, hardware online checks</td>
+                </tr>
+                <tr>
+                    <td class="time-col">Sat afternoon</td>
+                    <td><strong>Customer Validation Window</strong> — End-user devices tested</td>
+                </tr>
+                <tr>
+                    <td class="time-col">Sat/Sun</td>
+                    <td>PDU failover tests, WiFi speed tests, CompanyCam documentation</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- PHASE 1: Infrastructure & Physical Completion -->
+        <div class="phase-label">PHASE 1 — INFRASTRUCTURE & PHYSICAL COMPLETION</div>
+        
+        <div class="section-card">
+            <div class="section-header phase1" onclick="toggleSection('s-1-1')">
+                <span class="section-title">🔐 1.1 — On-Site Access & Staging</span>
+                <span>
+                    <span class="section-badge" id="badge-s-1-1">0/3</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-1-1">
+                <div class="sub-section">
+                    <div class="check-item done" data-id="c-1-1-1" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label"><span class="check-tag tag-done">DONE</span>On-site access confirmed (IDF rooms, MDF access, loading dock)</div>
+                    </div>
+                    <div class="check-item done" data-id="c-1-1-2" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label"><span class="check-tag tag-done">DONE</span>All Meter hardware delivered and staged</div>
+                    </div>
+                    <div class="check-item done" data-id="c-1-1-3" onclick="toggle(this)">
+                        <div class="check-box">✓</div>
+                        <div class="check-label"><span class="check-tag tag-done">DONE</span>Work order reviewed (topology, rack elevation, cabling plan)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header phase1" onclick="toggleSection('s-1-2')">
+                <span class="section-title">🛠️ 1.2 — Hardware Installation & Cabling</span>
+                <span>
+                    <span class="section-badge" id="badge-s-1-2">0/5</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-1-2">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-1-2-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Rack and stack complete (firewalls, switches, PDUs in rack)</div>
+                    </div>
+                    <div class="check-item" data-id="c-1-2-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">All cable runs complete and terminated</div>
+                    </div>
+                    <div class="check-item" data-id="c-1-2-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">APs mounted and connected (verify ceiling placement, not attic)</div>
+                    </div>
+                    <div class="check-item" data-id="c-1-2-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Permanent link tester run on all cable plant</div>
+                    </div>
+                    <div class="check-item" data-id="c-1-2-5" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Label maker applied to all ports (MDF, IDF, PDU outlets)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header phase1" onclick="toggleSection('s-1-3')">
+                <span class="section-title">🌐 1.3 — ISP & WAN Handoff</span>
+                <span>
+                    <span class="section-badge" id="badge-s-1-3">0/3</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-1-3">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-1-3-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">ISP circuit installed and demarc identified
+                            <div class="check-note">Verify both Comcast primary and backup circuit ready for Meter handoff</div>
+                        </div>
+                    </div>
+                    <div class="check-item" data-id="c-1-3-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">ISP patch-in complete (handoff to Meter WAN)</div>
+                    </div>
+                    <div class="check-item" data-id="c-1-3-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">MDF-ISP switch cabled and configured for ISP VLANs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 2: Network Bring-Up -->
+        <div class="phase-label">PHASE 2 — NETWORK BRING-UP</div>
+
+        <div class="section-card">
+            <div class="section-header phase2" onclick="toggleSection('s-2-1')">
+                <span class="section-title">💾 2.1 — Device & Dashboard Validation</span>
+                <span>
+                    <span class="section-badge" id="badge-s-2-1">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-2-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-2-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">All devices online in Meter Dashboard (FW/SA, switches, APs, PDUs)</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Dashboard Issues page: no unexpected errors</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">NOS version confirmed as 13.12 on firewall (post-upgrade)</div>
+                        <div class="check-note">Upgrade from 12.11 to 13.12 scheduled Fri evening; unlocks AutoVPN, removes config overrides</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Device serials cross-checked against Bill of Materials</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header phase2" onclick="toggleSection('s-2-2')">
+                <span class="section-title">📡 2.2 — WAN & ISP Quality</span>
+                <span>
+                    <span class="section-badge" id="badge-s-2-2">0/3</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-2-2">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-2-2-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Primary ISP quality: 100% on WAN0 (Comcast primary)</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-2-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Backup ISP quality: 100% on WAN1 (Comcast backup) or documented N/A</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-2-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">ISP gateway MAC learning verified on both WAN ports</div>
+                        <div class="check-note">If gateway MAC fails to learn, escalate to DEng/TSE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header phase2" onclick="toggleSection('s-2-3')">
+                <span class="section-title">🌊 2.3 — Switch & AP Configuration</span>
+                <span>
+                    <span class="section-badge" id="badge-s-2-3">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-2-3">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-2-3-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Switch auto-config complete — all VLANs applied (VLAN 10 default, VLAN 20 voice)</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-3-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">ACS (auto-channel selection) complete on all APs</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-3-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">AP power settings cross-referenced with Hamina</div>
+                    </div>
+                    <div class="check-item" data-id="c-2-3-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Switch patching matches topology (Cisco Nexus switches on NetApp trunks confirmed)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 3: Site-Specific Configuration -->
+        <div class="phase-label">PHASE 3 — SITE-SPECIFIC CONFIGURATION</div>
+
+        <div class="section-card">
+            <div class="section-header phase3" onclick="toggleSection('s-3-1')">
+                <span class="section-title">⚙️ 3.1 — Network Configuration</span>
+                <span>
+                    <span class="section-badge" id="badge-s-3-1">0/6</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-3-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-3-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">DNS configuration (customer on-prem DNS at 172.17.185.100)
+                            <div class="check-note">Verify gateway-as-DNS disabled to avoid conflicts with Client VPN</div>
+                        </div>
+                    </div>
+                    <div class="check-item" data-id="c-3-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">AutoVPN group membership configured (Lahlouh-CA)</div>
+                        <div class="check-note">Post-13.12 upgrade, CA ↔ OH will use AutoVPN instead of IPsec override</div>
+                    </div>
+                    <div class="check-item" data-id="c-3-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Voice gateway VLAN (20) and port assignment on MDF switch</div>
+                    </div>
+                    <div class="check-item" data-id="c-3-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">IPsec tunnel to Expedient maintained (do not remove)</div>
+                        <div class="check-note">13.12 removes config overrides; Expedient tunnel should now work natively</div>
+                    </div>
+                    <div class="check-item" data-id="c-3-1-5" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">SSID names and passwords match existing (seamless roaming)</div>
+                    </div>
+                    <div class="check-item" data-id="c-3-1-6" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">VLAN assignments for critical devices (NetApp on Nexus trunks confirmed)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header phase3" onclick="toggleSection('s-3-2')">
+                <span class="section-title">🔐 3.2 — Client VPN Setup</span>
+                <span>
+                    <span class="section-badge" id="badge-s-3-2">0/3</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-3-2">
+                <div class="sub-section">
+                    <div class="check-item blocked" data-id="c-3-2-1">
+                        <div class="check-box">✗</div>
+                        <div class="check-label"><span class="check-tag tag-blocker">BLOCKER</span>Client VPN profile WireGuard hostname resolution issue
+                            <div class="check-note">meterddns.com hostname endpoint fails; use hardcoded IP workaround. Escalate for controller reboot if needed.</div>
+                        </div>
+                    </div>
+                    <div class="check-item" data-id="c-3-2-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Client VPN allowed subnets configured (10.201.0.0/24, 10.10.0.0/16, 172.19.x.0/24, 172.18.20.0/24)</div>
+                    </div>
+                    <div class="check-item" data-id="c-3-2-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Client VPN test: profiles distributed and tested on 2+ devices</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 4: HA & PDU Validation -->
+        <div class="phase-label">PHASE 4 — HA & PDU VALIDATION</div>
+
+        <div class="section-card">
+            <div class="section-header phase4" onclick="toggleSection('s-4-1')">
+                <span class="section-title">💪 4.1 — HA & Failover</span>
+                <span>
+                    <span class="section-badge" id="badge-s-4-1">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-4-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-4-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Both Primary and Backup Firewalls visible in Dashboard</div>
+                    </div>
+                    <div class="check-item" data-id="c-4-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">HA status: Primary SA is Active and Healthy</div>
+                    </div>
+                    <div class="check-item" data-id="c-4-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">PDU outlets labeled with device names (Primary SA, Backup SA, Switches, APs)</div>
+                    </div>
+                    <div class="check-item" data-id="c-4-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">PDU failover test: Power cycle Primary SA → Backup becomes Active in ~15s → Primary reboots (~2 min) → Primary resumes Primary role</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 5: Connectivity & Speed Tests -->
+        <div class="phase-label">PHASE 5 — CONNECTIVITY & SPEED TESTS</div>
+
+        <div class="section-card">
+            <div class="section-header phase3" onclick="toggleSection('s-5-1')">
+                <span class="section-title">🚀 5.1 — Speed & Ping Tests</span>
+                <span>
+                    <span class="section-badge" id="badge-s-5-1">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-5-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-5-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Dashboard Speed Test run — results verified against ISP circuit specs</div>
+                    </div>
+                    <div class="check-item" data-id="c-5-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Ping test — success rate 100%</div>
+                    </div>
+                    <div class="check-item" data-id="c-5-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Guest WiFi test on fast.com/speedtest.net (screenshot confirming WiFi, not LTE)</div>
+                    </div>
+                    <div class="check-item" data-id="c-5-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Speed test from client device via speedtest.meter.network</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header phase3" onclick="toggleSection('s-5-2')">
+                <span class="section-title">📊 5.2 — Wireless Health</span>
+                <span>
+                    <span class="section-badge" id="badge-s-5-2">0/2</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-5-2">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-5-2-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">WiFi clients show "Healthy" in Wireless Health dashboard</div>
+                    </div>
+                    <div class="check-item" data-id="c-5-2-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">WiFi speed test passed during HA failover (PDU power cycle)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 6: Site-to-Site Connectivity -->
+        <div class="phase-label">PHASE 6 — SITE-TO-SITE CONNECTIVITY</div>
+
+        <div class="section-card">
+            <div class="section-header phase3" onclick="toggleSection('s-6-1')">
+                <span class="section-title">🔗 6.1 — Multi-Site Tunnels</span>
+                <span>
+                    <span class="section-badge" id="badge-s-6-1">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-6-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-6-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">AutoVPN CA ↔ OH tunnel established and healthy (post-13.12 upgrade)</div>
+                        <div class="check-note">Replaces previous IPsec override; should now work natively with 13.12</div>
+                    </div>
+                    <div class="check-item" data-id="c-6-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Expedient IPsec tunnel (CA ↔ Expedient) up and passing traffic</div>
+                        <div class="check-note">No more config overrides needed with 13.12</div>
+                    </div>
+                    <div class="check-item" data-id="c-6-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">CA ↔ AWS site-to-site ping test (100% success)</div>
+                    </div>
+                    <div class="check-item" data-id="c-6-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">OH Expedient tunnel confirmed stable (previous issues with VPP fixed in 13.12)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 7: Customer Validation -->
+        <div class="phase-label">PHASE 7 — CUSTOMER VALIDATION</div>
+
+        <div class="section-card">
+            <div class="section-header phase3" onclick="toggleSection('s-7-1')">
+                <span class="section-title">✅ 7.1 — Customer Sign-Off</span>
+                <span>
+                    <span class="section-badge" id="badge-s-7-1">0/3</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-7-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-7-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Customer notified that network is ready for validation</div>
+                    </div>
+                    <div class="check-item" data-id="c-7-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Customer tests critical applications (internal file shares, NetApp access, VoIP, Internet access)</div>
+                    </div>
+                    <div class="check-item" data-id="c-7-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Customer confirms sign-off (documented in Slack #deployments thread)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 8: Documentation & Closeout -->
+        <div class="phase-label">PHASE 8 — DOCUMENTATION & CLOSEOUT</div>
+
+        <div class="section-card">
+            <div class="section-header phase4" onclick="toggleSection('s-8-1')">
+                <span class="section-title">📸 8.1 — CompanyCam & Documentation</span>
+                <span>
+                    <span class="section-badge" id="badge-s-8-1">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-8-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-8-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">CompanyCam checklist complete (all required photos and progress notes uploaded)</div>
+                    </div>
+                    <div class="check-item" data-id="c-8-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Walkthrough video uploaded to CompanyCam Photos tab</div>
+                    </div>
+                    <div class="check-item" data-id="c-8-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Physical deployment quality validated (rack neatness, cable management, labeling)</div>
+                    </div>
+                    <div class="check-item" data-id="c-8-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Technician feedback submitted on Airtable</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 9: Validation Release & Go-Live -->
+        <div class="phase-label">PHASE 9 — VALIDATION RELEASE & GO-LIVE</div>
+
+        <div class="section-card">
+            <div class="section-header phase4" onclick="toggleSection('s-9-1')">
+                <span class="section-title">🚀 9.1 — Tech Ops Validation Release</span>
+                <span>
+                    <span class="section-badge" id="badge-s-9-1">0/4</span>
+                    <span class="section-chevron">▾</span>
+                </span>
+            </div>
+            <div class="section-body" id="s-9-1">
+                <div class="sub-section">
+                    <div class="check-item" data-id="c-9-1-1" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">All validation steps confirmed passed (by DE / Tech Ops lead)</div>
+                        <div class="check-note">Per Tech Ops Validation Gate Policy (effective Mar 4, 2026)</div>
+                    </div>
+                    <div class="check-item" data-id="c-9-1-2" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Any deviations documented in #deployments thread, JO notified</div>
+                    </div>
+                    <div class="check-item" data-id="c-9-1-3" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">Post "Core Network Closeout - Validation Release" in #deployments thread</div>
+                    </div>
+                    <div class="check-item" data-id="c-9-1-4" onclick="toggle(this)">
+                        <div class="check-box"></div>
+                        <div class="check-label">JO notified to mark network live in Dashboard; network status moved to "Network Live"</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deviations Table -->
+        <h3 style="margin-top: 40px; margin-bottom: 16px;">Deviations Log</h3>
+        <table class="deviations-table">
+            <thead>
+                <tr>
+                    <th>Deviation</th>
+                    <th>Details</th>
+                    <th>Status / Resolution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Client VPN WireGuard Endpoint Hostname Issue</td>
+                    <td>meterddns.com hostname fails to resolve at tunnel establishment; clients only connect with hardcoded IP. Affects customer profile distribution.</td>
+                    <td><span class="status-badge badge-open">⚠ Open — Workaround</span></td>
+                </tr>
+                <tr>
+                    <td>NOS Upgrade Window</td>
+                    <td>Firewall must be upgraded from 12.11 to 13.12 on Friday evening (Fri 3/20 ~6 PM) to unlock AutoVPN and remove config overrides.</td>
+                    <td><span class="status-badge badge-open">⚠ Scheduled</span></td>
+                </tr>
+                <tr>
+                    <td>Customer Sensitivity Post-Deployment</td>
+                    <td>Lahlouh is sensitive to changes after experiencing past issues (overrides, VPN bugs, tunnels). Treat gently; confirm scope before any deviations.</td>
+                    <td><span class="status-badge badge-open">⚠ Ongoing Awareness</span></td>
+                </tr>
+                <tr>
+                    <td>Cisco Nexus Switch Coexistence</td>
+                    <td>Customer's 2x Cisco Nexus 9300 switches (Burlingame) tied to NetApp servers via 10GB ports. Must remain in place; no swap planned during cutover.</td>
+                    <td><span class="status-badge badge-resolved">✓ Confirmed</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="reset-button" onclick="resetAll()">Reset All Checkboxes</button>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'lahlouh_burlingame_checklist_v1';
+
+        function getState() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+        }
+
+        function saveState(state) {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+        }
+
+        function toggle(el) {
+            if (el.classList.contains('blocked') || el.classList.contains('na')) return;
+            const id = el.dataset.id;
+            const state = getState();
+            const isDone = el.classList.contains('done');
+            if (isDone) {
+                el.classList.remove('done');
+                el.querySelector('.check-box').textContent = '';
+                state[id] = false;
+            } else {
+                el.classList.add('done');
+                el.querySelector('.check-box').textContent = '✓';
+                state[id] = true;
+            }
+            saveState(state);
+            updateProgress();
+        }
+
+        function toggleSection(id) {
+            document.getElementById(id).parentElement.classList.toggle('section-collapsed');
+        }
+
+        function updateProgress() {
+            const allCheckable = document.querySelectorAll('.check-item[onclick]');
+            const done = document.querySelectorAll('.check-item.done');
+            const total = allCheckable.length;
+            const completed = done.length;
+            const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+            document.getElementById('progress-label').textContent = `${completed} of ${total} items complete`;
+            document.getElementById('progress-pct').textContent = `${pct}%`;
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.querySelectorAll('.section-card').forEach(card => {
+                const badge = document.getElementById('badge-' + card.id);
+                if (!badge) return;
+                const items = card.querySelectorAll('.check-item[onclick]');
+                const doneItems = card.querySelectorAll('.check-item.done');
+                badge.textContent = `${doneItems.length}/${items.length}`;
+            });
+        }
+
+        function resetAll() {
+            if (!confirm('Reset all checkboxes?')) return;
+            document.querySelectorAll('.check-item[onclick]').forEach(el => {
+                el.classList.remove('done');
+                el.querySelector('.check-box').textContent = '';
+            });
+            localStorage.removeItem(STORAGE_KEY);
+            updateProgress();
+        }
+
+        // Pre-populated states from Slack validation evidence (March 21-22, 2026)
+        const DONE_INITIAL = [
+          'c-1-1-1','c-1-1-2','c-1-1-3',
+          'c-1-2-1','c-1-2-2','c-1-2-3','c-1-2-4','c-1-2-5',
+          'c-1-3-1','c-1-3-2','c-1-3-3',
+          'c-2-1-1','c-2-1-2','c-2-1-3','c-2-1-4',
+          'c-2-2-1','c-2-2-2','c-2-2-3',
+          'c-2-3-1','c-2-3-2','c-2-3-3','c-2-3-4',
+          'c-3-1-1','c-3-1-2','c-3-1-3','c-3-1-4','c-3-1-5','c-3-1-6',
+          'c-3-2-2','c-3-2-3',
+          'c-4-1-1','c-4-1-2','c-4-1-3','c-4-1-4',
+          'c-5-1-1','c-5-1-2','c-5-1-3','c-5-1-4',
+          'c-5-2-1','c-5-2-2',
+          'c-6-1-1','c-6-1-2','c-6-1-3','c-6-1-4',
+          'c-7-1-1','c-7-1-2','c-7-1-3',
+          'c-8-1-1','c-8-1-2','c-8-1-3',
+          'c-9-1-1','c-9-1-2','c-9-1-3','c-9-1-4'
+        ]; // 54/56 done · c-3-2-1 = client VPN blocker · c-8-1-4 = tech feedback pending
+
+        (function init() {
+            const state = getState();
+            const isEmpty = Object.keys(state).length === 0;
+            if (isEmpty) {
+                const seed = {};
+                DONE_INITIAL.forEach(id => { seed[id] = true; });
+                saveState(seed);
+            }
+            const currentState = getState();
+            document.querySelectorAll('.check-item[onclick]').forEach(el => {
+                if (currentState[el.dataset.id] === true) {
+                    el.classList.add('done');
+                    el.querySelector('.check-box').textContent = '✓';
+                }
+            });
+            updateProgress();
+        })();
+    </script>
+</body>
+</html>

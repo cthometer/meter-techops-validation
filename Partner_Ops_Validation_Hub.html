@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meter Tech Ops — Validation Hub</title>
+<style>
+  :root {
+    --green: #16a34a; --green-bg: #dcfce7; --green-border: #86efac;
+    --yellow: #d97706; --yellow-bg: #fef3c7; --yellow-border: #fcd34d;
+    --red: #dc2626; --red-bg: #fee2e2; --red-border: #fca5a5;
+    --blue: #2563eb; --blue-bg: #dbeafe; --blue-border: #93c5fd;
+    --orange: #ea580c; --orange-bg: #fff7ed; --orange-border: #fdba74;
+    --gray: #6b7280; --gray-bg: #f3f4f6;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; font-size: 14px; }
+
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1a56db 100%);
+    color: white; padding: 32px 40px 28px;
+  }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .header h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+  .header .sub { font-size: 14px; opacity: 0.8; margin-top: 6px; }
+  .header-clock { font-size: 12px; opacity: 0.7; text-align: right; }
+  .header-clock .time { font-size: 18px; font-weight: 700; opacity: 1; margin-top: 2px; }
+
+  .stats-row {
+    display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stat-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-green { background: #4ade80; }
+  .dot-yellow { background: #fbbf24; }
+  .dot-red { background: #f87171; }
+  .dot-blue { background: #60a5fa; }
+
+  .notice {
+    background: linear-gradient(90deg, #0c4a6e, #075985);
+    color: white; padding: 12px 40px; font-size: 12px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .notice strong { font-weight: 700; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--gray); margin-bottom: 12px; margin-top: 28px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+  .site-card {
+    background: white; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s, transform 0.15s;
+  }
+  .site-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); transform: translateY(-1px); }
+
+  .card-stripe { height: 5px; }
+  .stripe-green { background: linear-gradient(90deg, #16a34a, #4ade80); }
+  .stripe-yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .stripe-red { background: linear-gradient(90deg, #dc2626, #f87171); }
+  .stripe-blue { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+  .stripe-orange { background: linear-gradient(90deg, #ea580c, #fb923c); }
+
+  .card-body { padding: 18px 20px; }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .card-title { font-size: 15px; font-weight: 700; color: #0f172a; line-height: 1.3; }
+  .card-address { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+  .status-badge {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-live { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-live-cond { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+  .badge-inprog { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge-blocked { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-pending { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+
+  .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .meta-tag { font-size: 11px; background: var(--gray-bg); color: #374151; padding: 3px 8px; border-radius: 6px; }
+
+  .progress-row { margin-bottom: 14px; }
+  .progress-nums { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); margin-bottom: 5px; }
+  .progress-track { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 3px; }
+  .bar-green { background: linear-gradient(90deg, #16a34a, #4ade80); }
+  .bar-yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .bar-red { background: linear-gradient(90deg, #dc2626, #f87171); }
+  .bar-blue { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+  .bar-orange { background: linear-gradient(90deg, #ea580c, #fb923c); }
+
+  .open-items { margin-bottom: 14px; }
+  .open-items-label { font-size: 11px; font-weight: 600; color: var(--gray); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .open-item { font-size: 12px; color: #374151; padding: 3px 0; display: flex; gap: 6px; line-height: 1.4; }
+  .open-item .dot-icon { flex-shrink: 0; margin-top: 1px; }
+
+  .card-actions { display: flex; gap: 8px; }
+  .btn-open {
+    flex: 1; background: #1e3a5f; color: white; border: none; border-radius: 8px;
+    padding: 9px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+    text-align: center; text-decoration: none; display: block;
+    transition: background 0.15s;
+  }
+  .btn-open:hover { background: #2563eb; }
+  .btn-open.green { background: var(--green); }
+  .btn-open.green:hover { background: #15803d; }
+  .btn-open.blocked { background: #6b7280; cursor: default; }
+
+  /* Last updated footer per card */
+  .card-footer { padding: 8px 20px; background: #f8fafc; border-top: 1px solid var(--border); font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; }
+
+  /* Info section */
+  .info-section {
+    background: white; border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 24px; margin-top: 28px; margin-bottom: 0;
+  }
+  .info-section h3 { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .info-item { background: var(--gray-bg); border-radius: 8px; padding: 10px 12px; }
+  .info-item .label { font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .info-item .value { font-size: 13px; color: #1e293b; font-weight: 500; }
+
+  footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 24px; border-top: 1px solid var(--border); margin-top: 32px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>⚡ Meter Tech Ops — Validation Hub</h1>
+      <div class="sub">Partner Ops · Deployment Closeout &amp; Validation Status · Week of March 22, 2026</div>
+    </div>
+    <div class="header-clock">
+      <div>Refreshed</div>
+      <div class="time" id="clock">—</div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip"><span class="dot dot-green"></span> 3 Network Live</div>
+    <div class="stat-chip"><span class="dot dot-blue"></span> 1 Cutover In Progress</div>
+    <div class="stat-chip"><span class="dot dot-red"></span> 1 Blocked (Hardware)</div>
+    <div class="stat-chip"><span class="dot dot-green"></span> 5 Sites This Package</div>
+  </div>
+</div>
+
+<div class="notice">
+  <span>🔒 <strong>Partner Ops Review Package</strong> — For internal review only. Do not post externally.</span>
+  <span>·</span>
+  <span>All checklists reflect live Slack + Airtable data as of <strong>March 22, 2026 @ 11:45 PM ET</strong>.</span>
+  <span>·</span>
+  <span>Open each checklist to view full item-by-item status and update in real time.</span>
+</div>
+
+<div class="container">
+
+  <div class="section-label">🟢 Network Live</div>
+  <div class="site-grid">
+
+    <!-- CentroMed Guadalupe -->
+    <div class="site-card">
+      <div class="card-stripe stripe-green"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <div>
+            <div class="card-title">CentroMed — Guadalupe St</div>
+            <div class="card-address">1314 Guadalupe St Suite 107, San Antonio TX &nbsp;·&nbsp; SW-043025</div>
+          </div>
+          <span class="status-badge badge-live">🟢 Live</span>
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">Billing: 2026-03-21</span>
+          <span class="meta-tag">Tech: 1Touch</span>
+          <span class="meta-tag">DE: Sudarsshan Krishna</span>
+        </div>
+        <div class="progress-row">
+          <div class="progress-nums"><span>36 / 40 items confirmed</span><span>90%</span></div>
+          <div class="progress-track"><div class="progress-bar bar-green" style="width:90%"></div></div>
+        </div>
+        <div class="open-items">
+          <div class="open-items-label">Open Items</div>
+          <div class="open-item"><span class="dot-icon">📋</span>CompanyCam checklist pending</div>
+          <div class="open-item"><span class="dot-icon">📋</span>Physical deployment quality — DE to validate</div>
+          <div class="open-item"><span class="dot-icon">📋</span>Technician feedback — Airtable submission pending</div>
+        </div>
+        <div class="card-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/CentroMed_Guadalupe_Checklist.html" class="btn-open green" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span>Validation Release: Mar 21 @ 2:06 PM EDT</span>
+        <span>Refreshed: Mar 22</span>
+      </div>
+    </div>
+
+    <!-- Impossible Inc -->
+    <div class="site-card">
+      <div class="card-stripe stripe-green"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Impossible Inc</div>
+            <div class="card-address">55 New Montgomery St, Floor 4, San Francisco CA</div>
+          </div>
+          <span class="status-badge badge-live">🟢 Live</span>
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">Billing: 2026-03-22</span>
+          <span class="meta-tag">Installer: Zach (CBF)</span>
+          <span class="meta-tag">DE: Sudarsshan Krishna</span>
+        </div>
+        <div class="progress-row">
+          <div class="progress-nums"><span>45 / 47 items confirmed</span><span>96%</span></div>
+          <div class="progress-track"><div class="progress-bar bar-green" style="width:96%"></div></div>
+        </div>
+        <div class="open-items">
+          <div class="open-items-label">Open Items</div>
+          <div class="open-item"><span class="dot-icon">🔌</span>Mikrotik/downstream switch integration — Plan B Monday (Michael unavailable)</div>
+          <div class="open-item"><span class="dot-icon">📋</span>WAN1 backup ISP — N/A at this site</div>
+          <div class="open-item"><span class="dot-icon">📋</span>HA — N/A (single firewall deployment)</div>
+        </div>
+        <div class="card-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Impossible_Inc_Checklist.html" class="btn-open green" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span>Validation Release: Mar 22 @ 2:33 PM EDT · Clean</span>
+        <span>Refreshed: Mar 22</span>
+      </div>
+    </div>
+
+    <!-- Lahlouh Burlingame -->
+    <div class="site-card">
+      <div class="card-stripe stripe-yellow"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Lahlouh — Burlingame</div>
+            <div class="card-address">1649 Adrian Rd, Burlingame CA &nbsp;·&nbsp; Standard Install</div>
+          </div>
+          <span class="status-badge badge-live-cond">🟡 Live (Cond.)</span>
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">Billing: 2026-03-21</span>
+          <span class="meta-tag">HA: Validated ✓</span>
+          <span class="meta-tag">Dual ISP ✓</span>
+        </div>
+        <div class="progress-row">
+          <div class="progress-nums"><span>54 / 56 items confirmed</span><span>96%</span></div>
+          <div class="progress-track"><div class="progress-bar bar-yellow" style="width:96%"></div></div>
+        </div>
+        <div class="open-items">
+          <div class="open-items-label">Open Items</div>
+          <div class="open-item"><span class="dot-icon">🔴</span>Server connectivity — Damian &amp; Alex La Fazia troubleshooting (Nexus switch issue)</div>
+          <div class="open-item"><span class="dot-icon">🟡</span>Client VPN — WireGuard hostname resolution blocker noted</div>
+          <div class="open-item"><span class="dot-icon">📋</span>Tech feedback — Airtable submission pending</div>
+        </div>
+        <div class="card-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Lahlouh_Burlingame_Checklist.html" class="btn-open" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span>Conditional Release: Mar 21 @ 10:56 PM EDT</span>
+        <span>Refreshed: Mar 22</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-label">🔵 Cutover In Progress</div>
+  <div class="site-grid">
+
+    <!-- Solesence Bolingbrook -->
+    <div class="site-card">
+      <div class="card-stripe stripe-blue"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Solesence LLC — Bolingbrook</div>
+            <div class="card-address">400 Crossroads Pkwy, Bolingbrook IL 60440 &nbsp;·&nbsp; SW — 6 IDFs</div>
+          </div>
+          <span class="status-badge badge-inprog">🔵 In Progress</span>
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">Cutover: Mar 21 @ 8:00 AM</span>
+          <span class="meta-tag">Customer: Isaac (Solesence)</span>
+          <span class="meta-tag">DE: Christian Diaz</span>
+        </div>
+        <div class="progress-row">
+          <div class="progress-nums"><span>~38 / 128 items confirmed</span><span>~30%</span></div>
+          <div class="progress-track"><div class="progress-bar bar-blue" style="width:30%"></div></div>
+        </div>
+        <div class="open-items">
+          <div class="open-items-label">Confirmed (Slack — Alex La Fazia, Mar 21 10:58 AM)</div>
+          <div class="open-item"><span class="dot-icon">✅</span>Firewalls online · ISP active (199.48.72.122)</div>
+          <div class="open-item"><span class="dot-icon">✅</span>IPsec tunnel UP (Azure, IKEv2/AES-256)</div>
+          <div class="open-item"><span class="dot-icon">✅</span>AutoVPN active (Bolingbrook ↔ Romeoville)</div>
+          <div class="open-item"><span class="dot-icon">⏳</span>Isaac's validation testing — status unknown</div>
+          <div class="open-item"><span class="dot-icon">⏳</span>Validation release NOT yet posted · Network NOT yet live</div>
+        </div>
+        <div class="card-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Bolingbrook_Cutover_Checklist.html" class="btn-open" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span>Pre-deploy sync: Mar 20 @ meeting &nbsp;·&nbsp; Cutover: Mar 21</span>
+        <span>Refreshed: Mar 22</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-label">🔴 Blocked — Hardware Issues</div>
+  <div class="site-grid">
+
+    <!-- Shack Properties -->
+    <div class="site-card">
+      <div class="card-stripe stripe-red"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Shack Properties LLC — Asheville</div>
+            <div class="card-address">105 Fairview Rd, Asheville NC 28803 &nbsp;·&nbsp; Suites 10 &amp; 30 (SI-013026)</div>
+          </div>
+          <span class="status-badge badge-blocked">🔴 Blocked</span>
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">Install Day 4 (Mar 18–20)</span>
+          <span class="meta-tag">Resuming: Mon 3/23</span>
+          <span class="meta-tag">Job Owner: Christian Diaz</span>
+        </div>
+        <div class="progress-row">
+          <div class="progress-nums"><span>11 / 26 items confirmed</span><span>Physical install done</span></div>
+          <div class="progress-track"><div class="progress-bar bar-red" style="width:42%"></div></div>
+        </div>
+        <div class="open-items">
+          <div class="open-items-label">Blockers</div>
+          <div class="open-item"><span class="dot-icon">🔴</span>SFPs in transit — UPS overnight 1Z166V980123359106 · Expected Mon 3/23 by 10:30 AM</div>
+          <div class="open-item"><span class="dot-icon">🔴</span>Backup MC06 firewall not shipped — device shortage, no ETA · HA blocked</div>
+          <div class="open-item"><span class="dot-icon">🔴</span>IDF switches not connected to MDF · AP05 &amp; AP08 offline</div>
+          <div class="open-item"><span class="dot-icon">🟡</span>AP07 removed (customer painting) · Spare pending MAC/SN from Jake Mon AM</div>
+          <div class="open-item"><span class="dot-icon">🟡</span>DE unassigned — flag to Mitchell / Koosha</div>
+        </div>
+        <div class="card-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Shack_Properties_Asheville_Checklist.html" class="btn-open" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span>Last update: Mar 22 @ 10:06 PM EDT (Faye, next owner)</span>
+        <span>Refreshed: Mar 22</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Reference Info -->
+  <div class="info-section">
+    <h3>📌 Quick Reference — Key Contacts &amp; Resources</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Solesence Customer POC</div>
+        <div class="value">Isaac Diaz — idiaz@solesence.com</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Shack Properties UPS Tracking</div>
+        <div class="value">1Z166V980123359106</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Lahlouh Server Issue</div>
+        <div class="value">Damian McKenzie &amp; Alex La Fazia — Nexus switch remediation</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Impossible Inc — Open Monday</div>
+        <div class="value">Mikrotik switch integration — Michael (Impossible Inc POC)</div>
+      </div>
+      <div class="info-item">
+        <div class="label">CentroMed Guadalupe DE</div>
+        <div class="value">Sudarsshan Krishna — mark network live</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Solesence Azure Gateway</div>
+        <div class="value">40.122.152.221 · Remote ID: same as Romeoville</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Shack Properties Dashboard</div>
+        <div class="value"><a href="https://dashboard.meter.com/network/019c1115-b180-2bbc-9ded-9232acdc7dea" target="_blank" style="color:#2563eb;">View Dashboard →</a></div>
+      </div>
+      <div class="info-item">
+        <div class="label">CentroMed Guadalupe Dashboard</div>
+        <div class="value"><a href="https://dashboard.meter.com/org/centromed/network/guadalupe-street/insights/network" target="_blank" style="color:#2563eb;">View Dashboard →</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Meter Tech Ops — Partner Ops Validation Hub &nbsp;·&nbsp; Generated March 22, 2026 &nbsp;·&nbsp; For internal review only
+</footer>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    const opts = { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+    document.getElementById('clock').textContent = now.toLocaleString('en-US', opts) + ' ET';
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+</script>
+
+</body>
+</html>

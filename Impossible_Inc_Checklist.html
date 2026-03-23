@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impossible Inc — Network Validation Checklist</title>
+<style>
+  :root {
+    --navy: #1A3A5C;
+    --blue: #2C5F8A;
+    --blue-light: #4A90C4;
+    --green: #2D6A2D;
+    --green-bg: #D6F0D6;
+    --red: #A00000;
+    --red-bg: #FFD6D6;
+    --amber: #856404;
+    --amber-bg: #FFF3CD;
+    --gray: #666666;
+    --gray-bg: #F0F0F0;
+    --white: #FFFFFF;
+    --alt: #F5F9FC;
+    --border: #CCCCCC;
+    --shadow: rgba(26,58,92,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #EEF3F8; color: #222; font-size: 14px; }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy); color: white;
+    padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  #topbar .site { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
+  #topbar .sub  { font-size: 12px; color: #AACCE0; margin-top: 1px; }
+  #topbar .right { display: flex; align-items: center; gap: 14px; }
+  #progress-wrap { background: rgba(255,255,255,0.15); border-radius: 20px; width: 160px; height: 10px; overflow: hidden; }
+  #progress-bar  { height: 100%; background: #4FC878; border-radius: 20px; transition: width 0.4s; width: 0%; }
+  #progress-pct  { font-size: 13px; font-weight: 700; min-width: 38px; text-align: right; }
+  #reset-btn {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3);
+    color: white; border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+  }
+  #reset-btn:hover { background: rgba(255,255,255,0.22); }
+
+  /* ── ALERTS ── */
+  .alert { border-radius: 8px; padding: 12px 16px; margin: 12px 20px 0; font-size: 13px; border-left: 4px solid; }
+  .alert-green  { background: var(--green-bg); border-color: var(--green); color: #1a4a1a; }
+  .alert-amber  { background: var(--amber-bg); border-color: #e0a800; color: var(--amber); }
+  .alert-blue   { background: #E8F1FA; border-color: var(--blue); color: var(--navy); }
+  .alert strong { font-weight: 700; display: block; margin-bottom: 3px; }
+
+  /* ── LAYOUT ── */
+  .main-grid { display: grid; grid-template-columns: 1fr 320px; gap: 0; max-width: 1300px; margin: 0 auto; padding: 16px 20px 40px; }
+  .checklist-col { min-width: 0; }
+  .sidebar-col { padding-left: 16px; }
+
+  /* ── NOTES & BLOCKERS PANEL ── */
+  #notes-panel { background: white; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 2px 8px var(--shadow); position: sticky; top: 68px; }
+  #notes-panel h3 { background: var(--navy); color: white; padding: 10px 14px; border-radius: 9px 9px 0 0; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; }
+  #notes-list { padding: 10px; max-height: 420px; overflow-y: auto; }
+  .note-item { background: var(--alt); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; border-left: 3px solid var(--blue-light); }
+  .note-item .note-label { font-weight: 700; color: var(--navy); font-size: 11px; margin-bottom: 2px; }
+  .note-item .note-text  { color: #444; line-height: 1.4; }
+  #notes-textarea { width: 100%; border: 1px solid var(--border); border-radius: 0 0 9px 9px; padding: 8px 10px; font-size: 12px; resize: vertical; min-height: 80px; font-family: inherit; outline: none; }
+  #notes-textarea:focus { border-color: var(--blue); }
+
+  /* ── SECTION CARDS ── */
+  .section-card { background: white; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 12px; box-shadow: 0 1px 4px var(--shadow); overflow: hidden; }
+  .section-header {
+    background: var(--blue); color: white;
+    padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; user-select: none;
+  }
+  .section-header:hover { background: var(--navy); }
+  .section-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .phase-badge { background: rgba(255,255,255,0.2); border-radius: 4px; padding: 1px 7px; font-size: 11px; }
+  .section-meta { font-size: 12px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 10px; }
+  .collapse-icon { font-size: 11px; transition: transform 0.2s; }
+  .section-body { padding: 0; }
+  .section-card.collapsed .section-body { display: none; }
+  .section-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+
+  /* ── CHECK ITEMS ── */
+  .check-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 9px 16px; border-bottom: 1px solid #F0F4F8;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: var(--alt); }
+  .check-box {
+    width: 22px; height: 22px; border-radius: 5px; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    transition: all 0.15s;
+  }
+  .check-item-content { flex: 1; min-width: 0; }
+  .check-label { font-size: 13px; line-height: 1.4; color: #333; }
+  .check-note  { font-size: 11px; color: var(--gray); margin-top: 2px; font-style: italic; }
+
+  /* States */
+  .check-item.done   { background: var(--green-bg) !important; }
+  .check-item.done   .check-box   { background: var(--green); border-color: var(--green); color: white; }
+  .check-item.done   .check-label { text-decoration: line-through; color: var(--green); }
+  .check-item.blocked { background: var(--red-bg) !important; cursor: default; }
+  .check-item.blocked .check-box  { background: var(--red); border-color: var(--red); color: white; font-size: 15px; }
+  .check-item.blocked .check-label{ font-weight: 600; color: var(--red); }
+  .check-item.na     { background: var(--gray-bg) !important; cursor: default; }
+  .check-item.na     .check-box   { background: #999; border-color: #999; color: white; font-size: 15px; }
+  .check-item.na     .check-label { color: var(--gray); text-decoration: line-through; }
+
+  /* ── TIMELINE TABLE ── */
+  .timeline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .timeline-table th { background: var(--navy); color: white; padding: 7px 12px; text-align: left; font-size: 12px; }
+  .timeline-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  .timeline-table tr:nth-child(even) td { background: var(--alt); }
+  .timeline-table tr.highlight td { background: var(--amber-bg); font-weight: 600; }
+
+  /* ── DEVIATIONS TABLE ── */
+  .dev-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .dev-table th { background: var(--navy); color: white; padding: 6px 10px; text-align: left; }
+  .dev-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .dev-table tr:nth-child(even) td { background: var(--alt); }
+  .dev-badge { display: inline-block; border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 700; }
+  .dev-approved { background: var(--green-bg); color: var(--green); }
+  .dev-accepted { background: #E8F1FA; color: var(--navy); }
+  .dev-open     { background: var(--amber-bg); color: var(--amber); }
+
+  /* ── SITE INFO TABLE ── */
+  .info-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 14px; }
+  .info-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+  .info-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; width: 140px; background: var(--alt); }
+  .info-table a { color: var(--blue); }
+
+  /* ── SECTION LABELS ── */
+  h2.section-label { font-size: 13px; font-weight: 700; color: var(--navy); margin: 18px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--blue); padding-bottom: 4px; }
+</style>
+</head>
+<body>
+<div style="background:linear-gradient(90deg,#0f4c1a,#15803d);color:white;padding:10px 32px;font-size:12px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+  <span>🟢 <strong>Auto-refreshed:</strong> March 22, 2026 @ 11:45 PM ET</span>
+  <span>·</span>
+  <span>Sources: Slack ✓ Airtable ✓</span>
+  <span>·</span>
+  <span><strong>Network LIVE</strong> — billing began 2026-03-22 · Clean Validation Release Mar 22 @ 2:33 PM EDT</span>
+  <span>·</span>
+  <span>45/47 confirmed done · WAN1 N/A · HA N/A · Mikrotik switch integration open (Plan B Monday)</span>
+</div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div>
+    <div class="site">Impossible Inc — 55 New Montgomery St, Floor 4, San Francisco</div>
+    <div class="sub">Core Network Validation Closeout &nbsp;|&nbsp; March 22, 2026 &nbsp;|&nbsp; Ubiquiti → Meter Migration</div>
+  </div>
+  <div class="right">
+    <div id="progress-wrap"><div id="progress-bar"></div></div>
+    <div id="progress-pct">0%</div>
+    <button id="reset-btn" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+<!-- ALERTS -->
+<div class="alert alert-green">
+  <strong>✅ Meter Core Network &amp; Wi-Fi — LIVE</strong>
+  All Meter hardware online. Wi-Fi SSIDs broadcasting: <code>hardware</code>, <code>software</code>, <code>staff</code>, <code>guest</code>. AT&amp;T primary ISP (1Gbps) connected on WAN0. MonkeyBrains backup available.
+</div>
+<div class="alert alert-amber">
+  <strong>⚠️ Open Item — Existing Switch Integration (Plan B: Monday)</strong>
+  Michael (Impossible Inc. POC) was unavailable for today's Zoom. Mikrotik/downstream switches not yet patched into Meter. Server farm (ML models) and wired desks offline until connected. Cables (DAC, SFP, patch) left on-site by Zach with photos forwarded to SP. Impossible Inc. to self-connect Monday; open Critical/Major ticket if needed.
+</div>
+<div class="alert alert-blue">
+  <strong>📌 Site Context</strong>
+  Full Ubiquiti → Meter migration. Old Ubiquiti APs removed. Dream Machine retained for UniFi Protect cameras only (Wi-Fi disabled). Customer TOR Mikrotik switches connect downstream from Meter access ports for 100–400G AI model workload.
+</div>
+
+<div class="main-grid">
+  <div class="checklist-col">
+
+    <!-- SITE INFO -->
+    <h2 class="section-label">Site Details</h2>
+    <table class="info-table">
+      <tr><td>Customer</td><td>Impossible Inc</td></tr>
+      <tr><td>Address</td><td>55 New Montgomery Street, Floor 4, San Francisco, CA 94105</td></tr>
+      <tr><td>Technician</td><td>Zach (CBF) — on-site</td></tr>
+      <tr><td>DE / Remote</td><td>Sudarsshan Krishna &nbsp;|&nbsp; Alex La Fazia (on-site assist)</td></tr>
+      <tr><td>Site POC</td><td>Anders Thomsen &nbsp;|&nbsp; (559) 476-6759 &nbsp;|&nbsp; anders.thomsen@impossible.place</td></tr>
+      <tr><td>ISP (Primary)</td><td>AT&amp;T — 1Gbps static — WAN0 ✅</td></tr>
+      <tr><td>ISP (Backup)</td><td>MonkeyBrains — available, not in use</td></tr>
+      <tr><td>Dashboard</td><td><a href="https://dashboard.meter.com/network/019bc356-210d-283b-9be1-603eb85de627" target="_blank">dashboard.meter.com/network/019bc356…</a></td></tr>
+      <tr><td>CompanyCam</td><td><a href="https://app.companycam.com/projects/97280475/todos" target="_blank">companycam.com/projects/97280475</a></td></tr>
+    </table>
+
+    <!-- TIMELINE -->
+    <h2 class="section-label">Cutover Timeline</h2>
+    <table class="timeline-table" style="margin-bottom:14px;">
+      <thead><tr><th>PDT</th><th>ET</th><th>Milestone</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr><td>8:00 AM</td><td>11:00 AM</td><td>Cutover start — Zach on-site, ATT confirmed on WAN0</td><td>Zach / Sudarsshan</td></tr>
+        <tr><td>8:00–9:00</td><td>11:00–12:00</td><td>Firewall, switches, APs online; ISP quality confirmed</td><td>Zach / Alex</td></tr>
+        <tr><td>9:00 AM</td><td>12:00 PM</td><td>Buffer — all devices online, WiFi broadcasting</td><td>Zach</td></tr>
+        <tr class="highlight"><td>9:30 AM</td><td>12:30 PM</td><td>⭐ Customer Zoom — switch integration attempt (Michael no-show)</td><td>Full team</td></tr>
+        <tr><td>9:30–11:00</td><td>12:30–2:00</td><td>Plan B activated — cables left on-site, Monday self-service plan</td><td>Sudarsshan / SP</td></tr>
+        <tr><td>11:00 AM</td><td>2:00 PM</td><td>Core Network Validation Release posted to #deployments</td><td>Chris</td></tr>
+      </tbody>
+    </table>
+
+    <!-- CHECKLIST PHASES -->
+    <h2 class="section-label">Validation Checklist</h2>
+
+    <!-- Phase 1 -->
+    <div class="section-card" id="card-p1">
+      <div class="section-header" onclick="toggleCard('p1')">
+        <div class="section-title"><span class="phase-badge">P1</span> Infrastructure &amp; Physical Completion</div>
+        <div class="section-meta"><span id="prog-p1">0/7</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p1-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">On-site access confirmed (IDF rooms, MDF access)</div><div class="check-note">Zach on-site 8:00 AM PDT (11:00 AM ET)</div></div>
+        </div>
+        <div class="check-item done" data-id="p1-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">All Meter hardware delivered and staged</div><div class="check-note">Hardware confirmed on-site pre-cutover</div></div>
+        </div>
+        <div class="check-item done" data-id="p1-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Rack and stack complete (MC06 firewall, 4x switches, 3x PDUs in rack)</div><div class="check-note">2x MS11 + 2x MS10 — topology V3</div></div>
+        </div>
+        <div class="check-item done" data-id="p1-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">11x MW08 APs mounted and connected to core switches</div><div class="check-note">+ 1 spare. All APs online.</div></div>
+        </div>
+        <div class="check-item done" data-id="p1-5" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">AT&amp;T ISP circuit patched in — WAN0 healthy</div><div class="check-note">Primary ISP (1Gbps static). MonkeyBrains backup available.</div></div>
+        </div>
+        <div class="check-item done" data-id="p1-6" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Cabling complete: 11x CAT6, 3x Cu SFPs, 11x DAC cables</div><div class="check-note">Net-new structured cabling</div></div>
+        </div>
+        <div class="check-item done" data-id="p1-7" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Old Ubiquiti APs fully removed. Dream Machine retained for UniFi Protect cameras (Wi-Fi disabled).</div><div class="check-note">Ubiquiti decommission complete</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="section-card" id="card-p2">
+      <div class="section-header" onclick="toggleCard('p2')">
+        <div class="section-title"><span class="phase-badge">P2</span> Network Bring-Up</div>
+        <div class="section-meta"><span id="prog-p2">0/8</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p2-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">All devices online in Meter Dashboard (MC06, 4x switches, 11x APs, 3x PDUs)</div></div>
+        </div>
+        <div class="check-item done" data-id="p2-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Dashboard Issues page — no unexpected errors</div></div>
+        </div>
+        <div class="check-item done" data-id="p2-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">NOS version confirmed latest GA on all devices</div></div>
+        </div>
+        <div class="check-item done" data-id="p2-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Primary ISP quality 100% on WAN0 — AT&amp;T 1Gbps</div><div class="check-note">Alex La Fazia assisted with ISP verification on-site</div></div>
+        </div>
+        <div class="check-item na" data-id="p2-5">
+          <div class="check-box">—</div>
+          <div class="check-item-content"><div class="check-label">Backup ISP quality — WAN1</div><div class="check-note">N/A — MonkeyBrains available as backup but not configured on WAN1</div></div>
+        </div>
+        <div class="check-item done" data-id="p2-6" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Switch auto-config complete — VLANs applied</div><div class="check-note">A01 (ports 1-40) = hardware | A02 (ports 1-40) = software | A03 (ports 1-40) = staff | Fiber ports 51-52 available per switch</div></div>
+        </div>
+        <div class="check-item done" data-id="p2-7" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">ACS (auto-channel selection) complete</div></div>
+        </div>
+        <div class="check-item done" data-id="p2-8" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Switch patching matches final topology (2x MS11 + 2x MS10)</div><div class="check-note">Topology V3: 3x MS12 removed, replaced with 3rd MS10</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="section-card" id="card-p3">
+      <div class="section-header" onclick="toggleCard('p3')">
+        <div class="section-title"><span class="phase-badge">P3</span> VLANs, SSIDs &amp; Switch Integration</div>
+        <div class="section-meta"><span id="prog-p3">0/9</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p3-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">SSID <code>hardware</code> configured and broadcasting</div><div class="check-note">Hardware Engineering VLAN — A01</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">SSID <code>software</code> configured and broadcasting</div><div class="check-note">Software Engineering VLAN — A02</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">SSID <code>staff</code> configured and broadcasting</div><div class="check-note">Staff VLAN — A03</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">SSID <code>guest</code> configured and broadcasting</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-5" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">VLAN port pre-tagging complete (Sudarsshan)</div><div class="check-note">A01 ports 1–40 = hardware | A02 ports 1–40 = software | A03 ports 1–40 = staff | Fiber 51–52 available per switch</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-6" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">AP power settings cross-referenced with Hamina</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-7" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Existing switch integration — cables left on-site (DAC, SFP, patch)</div><div class="check-note">Plan B: Michael unavailable. Cables photographed and location sent to SP. Impossible Inc. to self-connect Monday; open Critical ticket if needed.</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-8" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">SP notified of server farm + wired desk outage — managing customer expectations</div></div>
+        </div>
+        <div class="check-item done" data-id="p3-9" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Support team alerted to monitor for Critical/Major ticket from Impossible Inc on Monday</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="section-card" id="card-p4">
+      <div class="section-header" onclick="toggleCard('p4')">
+        <div class="section-title"><span class="phase-badge">P4</span> PDU Validation</div>
+        <div class="section-meta"><span id="prog-p4">0/3</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item na" data-id="p4-1">
+          <div class="check-box">—</div>
+          <div class="check-item-content"><div class="check-label">HA Failover Test (Primary → Backup → Restore)</div><div class="check-note">N/A — Non-HA site. Single MC06 firewall.</div></div>
+        </div>
+        <div class="check-item done" data-id="p4-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">3x MP01 PDUs online in Meter Dashboard</div></div>
+        </div>
+        <div class="check-item done" data-id="p4-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">PDU outlets labeled with correct device names</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="section-card" id="card-p5">
+      <div class="section-header" onclick="toggleCard('p5')">
+        <div class="section-title"><span class="phase-badge">P5</span> Connectivity &amp; Speed Tests</div>
+        <div class="section-meta"><span id="prog-p5">0/5</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p5-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Dashboard Speed Test — verified against AT&amp;T 1Gbps circuit</div></div>
+        </div>
+        <div class="check-item done" data-id="p5-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Ping Test — success rate 100%</div></div>
+        </div>
+        <div class="check-item done" data-id="p5-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Guest WiFi speed test on fast.com / speedtest.net (screenshot confirming WiFi not LTE)</div></div>
+        </div>
+        <div class="check-item done" data-id="p5-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Customer local network speed test via speedtest.meter.network</div></div>
+        </div>
+        <div class="check-item done" data-id="p5-5" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">WiFi clients show "Healthy" in Wireless Health dashboard</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 6 -->
+    <div class="section-card" id="card-p6">
+      <div class="section-header" onclick="toggleCard('p6')">
+        <div class="section-title"><span class="phase-badge">P6</span> Customer Validation</div>
+        <div class="section-meta"><span id="prog-p6">0/5</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p6-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Customer Zoom held — 9:30 AM PDT (12:30 PM ET)</div><div class="check-note">Sudarsshan, Alex, Zach, SP attended</div></div>
+        </div>
+        <div class="check-item done" data-id="p6-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Wi-Fi SSIDs validated live on Zoom call — all four broadcasting</div><div class="check-note">hardware, software, staff, guest — all confirmed</div></div>
+        </div>
+        <div class="check-item done" data-id="p6-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Plan B communicated and acknowledged by Impossible Inc. (SP)</div><div class="check-note">Monday self-connect plan accepted; Critical ticket process explained</div></div>
+        </div>
+        <div class="check-item done" data-id="p6-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Server farm + wired desk outage acknowledged by customer</div></div>
+        </div>
+        <div class="check-item done" data-id="p6-5" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Core network sign-off received (Meter side complete)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 7 -->
+    <div class="section-card" id="card-p7">
+      <div class="section-header" onclick="toggleCard('p7')">
+        <div class="section-title"><span class="phase-badge">P7</span> Documentation &amp; Closeout</div>
+        <div class="section-meta"><span id="prog-p7">0/5</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p7-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">CompanyCam checklist complete (all required photos + progress notes)</div><div class="check-note">companycam.com/projects/97280475</div></div>
+        </div>
+        <div class="check-item done" data-id="p7-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Cable location photographed by Zach and sent to Sudarsshan / SP</div><div class="check-note">DAC, SFP, patch cables left on-site for Monday</div></div>
+        </div>
+        <div class="check-item done" data-id="p7-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">End-of-day summary complete (Zach)</div></div>
+        </div>
+        <div class="check-item done" data-id="p7-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Airtable updated with closeout documentation and photos</div></div>
+        </div>
+        <div class="check-item done" data-id="p7-5" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Ops Network Closeout record updated in Airtable</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 8 -->
+    <div class="section-card" id="card-p8">
+      <div class="section-header" onclick="toggleCard('p8')">
+        <div class="section-title"><span class="phase-badge">P8</span> Validation Release &amp; Go-Live</div>
+        <div class="section-meta"><span id="prog-p8">0/5</span><span class="collapse-icon">▼</span></div>
+      </div>
+      <div class="section-body">
+        <div class="check-item done" data-id="p8-1" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">All core validation steps confirmed passed</div></div>
+        </div>
+        <div class="check-item done" data-id="p8-2" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Deviations documented in #deployments — JO notified</div><div class="check-note">Switch integration open item, Plan B, topology V3 change all noted</div></div>
+        </div>
+        <div class="check-item done" data-id="p8-3" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Core Network Validation Release posted to #deployments</div><div class="check-note">Posted March 22, 2026 — thread broadcast</div></div>
+        </div>
+        <div class="check-item done" data-id="p8-4" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">JO notified to mark network live in Meter Dashboard</div></div>
+        </div>
+        <div class="check-item done" data-id="p8-5" onclick="toggle(this)">
+          <div class="check-box">✓</div>
+          <div class="check-item-content"><div class="check-label">Dashboard, Airtable, and SFDC updated to "Network Live"</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEVIATIONS -->
+    <h2 class="section-label">Deviations Log</h2>
+    <table class="dev-table">
+      <thead><tr><th>#</th><th>Deviation</th><th>Impact</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Topology redesign: 3x MS12 replaced with 3rd MS10</td>
+          <td>Final: 2x MS11 + 2x MS10 (WO V3 updated)</td>
+          <td><span class="dev-badge dev-approved">Approved</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Customer TOR Mikrotik switches downstream from Meter access ports</td>
+          <td>100–400G AI model workload — non-standard downstream switching</td>
+          <td><span class="dev-badge dev-approved">Approved</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Existing switch integration not completed day-of (Michael no-show)</td>
+          <td>Server farm + wired desks offline. Plan B: Monday self-service + Critical ticket if needed.</td>
+          <td><span class="dev-badge dev-open">Open — Monday</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Single active ISP (AT&amp;T primary; MonkeyBrains backup available but not in use)</td>
+          <td>No live WAN failover. Backup circuit available if configured.</td>
+          <td><span class="dev-badge dev-accepted">Accepted</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div><!-- end checklist-col -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-col">
+    <div id="notes-panel">
+      <h3>📝 Notes &amp; Blockers</h3>
+      <div id="notes-list">
+        <div class="note-item">
+          <div class="note-label">ISP — WAN0</div>
+          <div class="note-text">AT&amp;T primary (1Gbps) confirmed healthy. MonkeyBrains backup available, not in active use.</div>
+        </div>
+        <div class="note-item">
+          <div class="note-label">Switch Integration — Plan B</div>
+          <div class="note-text">Michael (Impossible Inc. POC) no-show on Zoom. Cables left on-site by Zach. Impossible Inc. to attempt Monday; Critical ticket if needed → Meter remote assist.</div>
+        </div>
+        <div class="note-item">
+          <div class="note-label">Wi-Fi</div>
+          <div class="note-text">All 4 SSIDs live: hardware, software, staff, guest. Confirmed on customer Zoom call.</div>
+        </div>
+        <div class="note-item">
+          <div class="note-label">VLAN Pre-config</div>
+          <div class="note-text">Sudarsshan pre-tagged: A01 ports 1–40 = hardware | A02 = software | A03 = staff | Fiber 51–52 available per switch.</div>
+        </div>
+      </div>
+      <textarea id="notes-textarea" placeholder="Add field notes here… (auto-saved)"></textarea>
+    </div>
+  </div>
+
+</div><!-- end main-grid -->
+
+<script>
+const STORAGE_KEY = 'impossible_inc_55_new_montgomery_v2';
+
+// Phase item IDs (only toggleable ones — na/blocked are excluded)
+const PHASE_IDS = {
+  p1: ['p1-1','p1-2','p1-3','p1-4','p1-5','p1-6','p1-7'],
+  p2: ['p2-1','p2-2','p2-3','p2-4','p2-6','p2-7','p2-8'],
+  p3: ['p3-1','p3-2','p3-3','p3-4','p3-5','p3-6','p3-7','p3-8','p3-9'],
+  p4: ['p4-2','p4-3'],
+  p5: ['p5-1','p5-2','p5-3','p5-4','p5-5'],
+  p6: ['p6-1','p6-2','p6-3','p6-4','p6-5'],
+  p7: ['p7-1','p7-2','p7-3','p7-4','p7-5'],
+  p8: ['p8-1','p8-2','p8-3','p8-4','p8-5'],
+};
+
+// All toggleable IDs (not na/blocked)
+const ALL_IDS = Object.values(PHASE_IDS).flat();
+
+function getState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e) {}
+}
+
+function toggle(el) {
+  if (el.classList.contains('blocked') || el.classList.contains('na')) return;
+  const id = el.dataset.id;
+  const isDone = el.classList.contains('done');
+  const state = getState();
+  if (isDone) {
+    el.classList.remove('done');
+    el.querySelector('.check-box').textContent = '';
+    delete state[id];
+  } else {
+    el.classList.add('done');
+    el.querySelector('.check-box').textContent = '✓';
+    state[id] = true;
+  }
+  saveState(state);
+  updateProgress();
+  addNoteForItem(el, !isDone);
+}
+
+function toggleCard(phase) {
+  document.getElementById('card-' + phase).classList.toggle('collapsed');
+}
+
+function updateProgress() {
+  const state = getState();
+  const done = ALL_IDS.filter(id => state[id] === true).length;
+  const total = ALL_IDS.length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  // Phase progress
+  Object.entries(PHASE_IDS).forEach(([phase, ids]) => {
+    const phaseDone = ids.filter(id => state[id] === true).length;
+    const el = document.getElementById('prog-' + phase);
+    if (el) el.textContent = phaseDone + '/' + ids.length;
+  });
+}
+
+function addNoteForItem(el, checked) {
+  if (!checked) return;
+  const label = el.querySelector('.check-label').textContent.slice(0, 50);
+  const noteEl = document.createElement('div');
+  noteEl.className = 'note-item';
+  noteEl.innerHTML = '<div class="note-label">✓ Just checked</div><div class="note-text">' + label + '…</div>';
+  const list = document.getElementById('notes-list');
+  list.insertBefore(noteEl, list.firstChild);
+}
+
+function loadNotesPanel() {
+  const ta = document.getElementById('notes-textarea');
+  try { ta.value = localStorage.getItem(STORAGE_KEY + '_notes') || ''; } catch(e) {}
+  ta.addEventListener('input', function() {
+    try { localStorage.setItem(STORAGE_KEY + '_notes', ta.value); } catch(e) {}
+  });
+}
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes? This cannot be undone.')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  document.querySelectorAll('.check-item.done[onclick]').forEach(el => {
+    el.classList.remove('done');
+    el.querySelector('.check-box').textContent = '';
+  });
+  updateProgress();
+}
+
+// Init — mark all done items from saved state
+// Pre-populated states from Slack validation evidence (March 22, 2026 — clean release + LIVE)
+const DONE_INITIAL = [
+  'p1-1','p1-2','p1-3','p1-4','p1-5','p1-6','p1-7',
+  'p2-1','p2-2','p2-3','p2-4','p2-6','p2-7','p2-8',
+  'p3-1','p3-2','p3-3','p3-4','p3-5','p3-6','p3-7','p3-8','p3-9',
+  'p4-2','p4-3',
+  'p5-1','p5-2','p5-3','p5-4','p5-5',
+  'p6-1','p6-2','p6-3','p6-4','p6-5',
+  'p7-1','p7-2','p7-3','p7-4','p7-5',
+  'p8-1','p8-2','p8-3','p8-4','p8-5'
+]; // 45/47 done · p2-5 = WAN1 N/A · p4-1 = HA N/A
+const NA_IDS = ['p2-5','p4-1'];
+
+(function init() {
+  const state = getState();
+  const isEmpty = Object.keys(state).length === 0;
+  if (isEmpty) {
+    const seed = {};
+    DONE_INITIAL.forEach(id => { seed[id] = true; });
+    saveState(seed);
+  }
+  const currentState = getState();
+  document.querySelectorAll('.check-item[onclick]').forEach(el => {
+    if (currentState[el.dataset.id] === true) {
+      el.classList.add('done');
+      el.querySelector('.check-box').textContent = '✓';
+    }
+    if (NA_IDS.includes(el.dataset.id)) {
+      el.classList.add('na');
+      el.querySelector('.check-box').textContent = 'N/A';
+    }
+  });
+  loadNotesPanel();
+  updateProgress();
+})();
+</script>
+</body>
+</html>
