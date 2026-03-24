@@ -3,422 +3,597 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meter Tech Ops — Validation Hub</title>
+<title>Tech-Ops Pipeline Hub · Meter</title>
 <style>
   :root {
-    --green: #16a34a; --green-bg: #dcfce7; --green-border: #86efac;
-    --yellow: #d97706; --yellow-bg: #fef3c7; --yellow-border: #fcd34d;
-    --red: #dc2626; --red-bg: #fee2e2; --red-border: #fca5a5;
-    --blue: #2563eb; --blue-bg: #dbeafe; --blue-border: #93c5fd;
-    --orange: #ea580c; --orange-bg: #fff7ed; --orange-border: #fdba74;
-    --gray: #6b7280; --gray-bg: #f3f4f6;
-    --border: #e5e7eb;
+    --bg: #0e0e10;
+    --surface: #18181c;
+    --card: #1e1e24;
+    --border: #2e2e38;
+    --accent: #6366f1;
+    --accent2: #22d3ee;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --orange: #f97316;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --text: #f1f1f3;
+    --muted: #8888a0;
+    --subtle: #3a3a48;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; font-size: 14px; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; }
 
-  .header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1a56db 100%);
-    color: white; padding: 32px 40px 28px;
-  }
-  .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .header h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
-  .header .sub { font-size: 14px; opacity: 0.8; margin-top: 6px; }
-  .header-clock { font-size: 12px; opacity: 0.7; text-align: right; }
-  .header-clock .time { font-size: 18px; font-weight: 700; opacity: 1; margin-top: 2px; }
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 52px; position: sticky; top: 0; z-index: 100; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-weight: 700; font-size: 16px; color: var(--text); letter-spacing: -0.3px; }
+  .logo span { color: var(--accent); }
+  .divider-v { width: 1px; height: 20px; background: var(--border); }
+  .hub-title { color: var(--muted); font-size: 13px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .refresh-time { font-size: 12px; color: var(--muted); }
 
-  .stats-row {
-    display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap;
-  }
-  .stat-chip {
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .stat-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot-green { background: #4ade80; }
-  .dot-yellow { background: #fbbf24; }
-  .dot-red { background: #f87171; }
-  .dot-blue { background: #60a5fa; }
+  .stats-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; gap: 32px; overflow-x: auto; }
+  .stat { display: flex; flex-direction: column; gap: 2px; min-width: fit-content; }
+  .stat-val { font-size: 22px; font-weight: 700; }
+  .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-val.green { color: var(--green); }
+  .stat-val.yellow { color: var(--yellow); }
+  .stat-val.red { color: var(--red); }
+  .stat-val.blue { color: var(--blue); }
+  .stat-val.orange { color: var(--orange); }
+  .stat-val.accent { color: var(--accent); }
 
-  .notice {
-    background: linear-gradient(90deg, #0c4a6e, #075985);
-    color: white; padding: 12px 40px; font-size: 12px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  }
-  .notice strong { font-weight: 700; }
+  .main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .section-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
+  .section { margin-bottom: 32px; }
 
-  .container { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+  /* Active Validations */
+  .val-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .val-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.15s; }
+  .val-card:hover { border-color: var(--accent); }
+  .val-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .val-site-name { font-weight: 600; font-size: 14px; }
+  .val-site-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge.live { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .badge.cutover { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .badge.blocked { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge.conditional { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .progress-bar-wrap { background: var(--subtle); border-radius: 100px; height: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 100px; }
+  .val-meta { display: flex; gap: 12px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .open-items { display: flex; flex-direction: column; gap: 4px; }
+  .open-item { font-size: 12px; color: var(--muted); padding-left: 12px; position: relative; }
+  .open-item::before { content: '·'; position: absolute; left: 2px; color: var(--yellow); }
+  .val-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .btn-open { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; transition: opacity 0.15s; flex: 1; justify-content: center; }
+  .btn-open:hover { opacity: 0.85; }
+  .btn-open.green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .btn-open.blue { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .btn-open.gray { background: var(--subtle); color: var(--text); border: 1px solid var(--border); }
+  .btn-open.orange { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
 
-  .section-label {
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--gray); margin-bottom: 12px; margin-top: 28px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  /* Pipeline */
+  .day-group { margin-bottom: 24px; }
+  .day-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 0; border-bottom: 1px solid var(--border); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+  .day-label .today-pill { background: var(--accent); color: white; font-size: 10px; padding: 1px 7px; border-radius: 100px; text-transform: none; letter-spacing: 0; }
+  .pipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+  .pipe-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.15s; }
+  .pipe-card:hover { border-color: var(--accent); }
+  .pipe-card.live-card { border-color: rgba(34,197,94,0.3); }
+  .pipe-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .pipe-site { font-weight: 600; font-size: 13px; line-height: 1.3; }
+  .pipe-site-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .job-type-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+  .jt-swap { background: rgba(168,85,247,0.15); color: var(--purple); }
+  .jt-standard { background: rgba(34,211,238,0.12); color: var(--accent2); }
+  .jt-newbuild { background: rgba(34,197,94,0.12); color: var(--green); }
+  .jt-preinstall { background: rgba(234,179,8,0.12); color: var(--yellow); }
+  .jt-reactivation { background: rgba(249,115,22,0.12); color: var(--orange); }
+  .readiness-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+  .pill.ok { background: rgba(34,197,94,0.12); color: var(--green); }
+  .pill.warn { background: rgba(234,179,8,0.12); color: var(--yellow); }
+  .pill.fail { background: rgba(239,68,68,0.12); color: var(--red); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .pipe-team { display: flex; gap: 16px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .pipe-actions { display: flex; gap: 6px; }
+  .btn-sm { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); background: var(--subtle); color: var(--text); cursor: pointer; transition: all 0.15s; flex: 1; justify-content: center; }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm.primary { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.4); color: var(--accent); }
+  .btn-sm.primary:hover { background: rgba(99,102,241,0.25); }
+  .btn-sm.success { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: var(--green); }
+  .notes-box { background: rgba(255,255,255,0.03); border-radius: 6px; padding: 7px 10px; font-size: 11px; color: var(--muted); font-style: italic; border-left: 2px solid var(--border); }
+  .live-banner { font-size: 11px; font-weight: 700; color: var(--green); display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
 
-  .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-
-  .site-card {
-    background: white; border-radius: 14px; overflow: hidden;
-    border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    transition: box-shadow 0.2s, transform 0.15s;
-  }
-  .site-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); transform: translateY(-1px); }
-
-  .card-stripe { height: 5px; }
-  .stripe-green { background: linear-gradient(90deg, #16a34a, #4ade80); }
-  .stripe-yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
-  .stripe-red { background: linear-gradient(90deg, #dc2626, #f87171); }
-  .stripe-blue { background: linear-gradient(90deg, #2563eb, #60a5fa); }
-  .stripe-orange { background: linear-gradient(90deg, #ea580c, #fb923c); }
-
-  .card-body { padding: 18px 20px; }
-  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-  .card-title { font-size: 15px; font-weight: 700; color: #0f172a; line-height: 1.3; }
-  .card-address { font-size: 11px; color: var(--gray); margin-top: 2px; }
-
-  .status-badge {
-    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-    white-space: nowrap; flex-shrink: 0;
-  }
-  .badge-live { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-  .badge-live-cond { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
-  .badge-inprog { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
-  .badge-blocked { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
-  .badge-pending { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
-
-  .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-  .meta-tag { font-size: 11px; background: var(--gray-bg); color: #374151; padding: 3px 8px; border-radius: 6px; }
-
-  .progress-row { margin-bottom: 14px; }
-  .progress-nums { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); margin-bottom: 5px; }
-  .progress-track { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
-  .progress-bar { height: 100%; border-radius: 3px; }
-  .bar-green { background: linear-gradient(90deg, #16a34a, #4ade80); }
-  .bar-yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
-  .bar-red { background: linear-gradient(90deg, #dc2626, #f87171); }
-  .bar-blue { background: linear-gradient(90deg, #2563eb, #60a5fa); }
-  .bar-orange { background: linear-gradient(90deg, #ea580c, #fb923c); }
-
-  .open-items { margin-bottom: 14px; }
-  .open-items-label { font-size: 11px; font-weight: 600; color: var(--gray); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .open-item { font-size: 12px; color: #374151; padding: 3px 0; display: flex; gap: 6px; line-height: 1.4; }
-  .open-item .dot-icon { flex-shrink: 0; margin-top: 1px; }
-
-  .card-actions { display: flex; gap: 8px; }
-  .btn-open {
-    flex: 1; background: #1e3a5f; color: white; border: none; border-radius: 8px;
-    padding: 9px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
-    text-align: center; text-decoration: none; display: block;
-    transition: background 0.15s;
-  }
-  .btn-open:hover { background: #2563eb; }
-  .btn-open.green { background: var(--green); }
-  .btn-open.green:hover { background: #15803d; }
-  .btn-open.blocked { background: #6b7280; cursor: default; }
-
-  /* Last updated footer per card */
-  .card-footer { padding: 8px 20px; background: #f8fafc; border-top: 1px solid var(--border); font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; }
-
-  /* Info section */
-  .info-section {
-    background: white; border: 1px solid var(--border); border-radius: 14px;
-    padding: 20px 24px; margin-top: 28px; margin-bottom: 0;
-  }
-  .info-section h3 { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
-  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
-  .info-item { background: var(--gray-bg); border-radius: 8px; padding: 10px 12px; }
-  .info-item .label { font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-  .info-item .value { font-size: 13px; color: #1e293b; font-weight: 500; }
-
-  footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 24px; border-top: 1px solid var(--border); margin-top: 32px; }
+  /* How to use */
+  .how-to-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 640px) { .how-to-box { grid-template-columns: 1fr; } }
+  .how-to-col h4 { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--accent2); }
+  .how-step { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+  .step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: white; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .prompt-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: monospace; font-size: 12px; color: var(--accent2); margin-top: 6px; white-space: pre-wrap; }
+  .copy-btn { display: inline-block; padding: 4px 10px; border-radius: 4px; background: var(--subtle); border: 1px solid var(--border); font-size: 11px; cursor: pointer; margin-top: 6px; transition: background 0.15s; color: var(--text); }
+  .copy-btn:hover { background: var(--border); }
+  .copy-btn.copied { color: var(--green); border-color: rgba(34,197,94,0.4); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
-    <div>
-      <h1>⚡ Meter Tech Ops — Validation Hub</h1>
-      <div class="sub">Partner Ops · Deployment Closeout &amp; Validation Status · Week of March 22, 2026</div>
-    </div>
-    <div class="header-clock">
-      <div>Refreshed</div>
-      <div class="time" id="clock">—</div>
-    </div>
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">meter<span>.</span></div>
+    <div class="divider-v"></div>
+    <div class="hub-title">Tech-Ops Pipeline Hub</div>
   </div>
-  <div class="stats-row">
-    <div class="stat-chip"><span class="dot dot-green"></span> 3 Network Live</div>
-    <div class="stat-chip"><span class="dot dot-blue"></span> 1 Cutover In Progress</div>
-    <div class="stat-chip"><span class="dot dot-red"></span> 1 Blocked (Hardware)</div>
-    <div class="stat-chip"><span class="dot dot-green"></span> 5 Sites This Package</div>
+  <div class="topbar-right">
+    <span class="refresh-time">🔄 Refreshed: March 23, 2026 @ 11:05 PM ET</span>
   </div>
 </div>
 
-<div class="notice">
-  <span>🔒 <strong>Partner Ops Review Package</strong> — For internal review only. Do not post externally.</span>
-  <span>·</span>
-  <span>All checklists reflect live Slack + Airtable data as of <strong>March 22, 2026 @ 11:45 PM ET</strong>.</span>
-  <span>·</span>
-  <span>Open each checklist to view full item-by-item status and update in real time.</span>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-val green">3</div><div class="stat-lbl">Network Live</div></div>
+  <div class="stat"><div class="stat-val blue">1</div><div class="stat-lbl">Cutover In Progress</div></div>
+  <div class="stat"><div class="stat-val orange">1</div><div class="stat-lbl">Blocked</div></div>
+  <div class="stat"><div class="stat-val yellow">4</div><div class="stat-lbl">Installs Today</div></div>
+  <div class="stat"><div class="stat-val accent">139</div><div class="stat-lbl">Jobs Next 30 Days</div></div>
+  <div class="stat"><div class="stat-val red">12</div><div class="stat-lbl">ISP Incomplete</div></div>
+  <div class="stat"><div class="stat-val green">2</div><div class="stat-lbl">ISP Complete Today</div></div>
 </div>
 
-<div class="container">
+<div class="main">
 
-  <div class="section-label">🟢 Network Live</div>
-  <div class="site-grid">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Active Validation Checklists</div>
+      <span style="font-size:12px;color:var(--muted)">Interactive — click items to mark complete · state saved in browser</span>
+    </div>
+    <div class="val-grid">
 
-    <!-- CentroMed Guadalupe -->
-    <div class="site-card">
-      <div class="card-stripe stripe-green"></div>
-      <div class="card-body">
-        <div class="card-header">
-          <div>
-            <div class="card-title">CentroMed — Guadalupe St</div>
-            <div class="card-address">1314 Guadalupe St Suite 107, San Antonio TX &nbsp;·&nbsp; SW-043025</div>
-          </div>
-          <span class="status-badge badge-live">🟢 Live</span>
+      <div class="val-card">
+        <div class="val-card-top">
+          <div><div class="val-site-name">CentroMed — Guadalupe</div><div class="val-site-sub">San Antonio, TX · Standard Install</div></div>
+          <span class="badge live">🟢 Network Live</span>
         </div>
-        <div class="card-meta">
-          <span class="meta-tag">Billing: 2026-03-21</span>
-          <span class="meta-tag">Tech: 1Touch</span>
-          <span class="meta-tag">DE: Sudarsshan Krishna</span>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--green)">36/40 (90%)</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%;background:var(--green)"></div></div>
         </div>
-        <div class="progress-row">
-          <div class="progress-nums"><span>36 / 40 items confirmed</span><span>90%</span></div>
-          <div class="progress-track"><div class="progress-bar bar-green" style="width:90%"></div></div>
-        </div>
+        <div class="val-meta"><span>👤 Zach Gruzd</span><span>📅 Live Mar 21</span><span>🔖 Phase 7 — Docs</span></div>
         <div class="open-items">
-          <div class="open-items-label">Open Items</div>
-          <div class="open-item"><span class="dot-icon">📋</span>CompanyCam checklist pending</div>
-          <div class="open-item"><span class="dot-icon">📋</span>Physical deployment quality — DE to validate</div>
-          <div class="open-item"><span class="dot-icon">📋</span>Technician feedback — Airtable submission pending</div>
+          <div class="open-item">Physical deployment quality — DE validation pending</div>
+          <div class="open-item">Technician feedback — Airtable submission pending</div>
+          <div class="open-item">Detailed closeout report outstanding</div>
+          <div class="open-item">Validation Release not yet posted to #deployments</div>
         </div>
-        <div class="card-actions">
+        <div class="val-actions">
           <a href="https://cthometer.github.io/meter-techops-validation/CentroMed_Guadalupe_Checklist.html" class="btn-open green" target="_blank">Open Checklist →</a>
+          <a href="https://docs.google.com/document/d/1XQkVZVnRyK_LCYjTgHTIaxsQ2QnCHr1HJuUSieQ32jY/edit?usp=drive_link" class="btn-open gray" target="_blank">Work Order</a>
         </div>
       </div>
-      <div class="card-footer">
-        <span>Validation Release: Mar 21 @ 2:06 PM EDT</span>
-        <span>Refreshed: Mar 22</span>
-      </div>
-    </div>
 
-    <!-- Impossible Inc -->
-    <div class="site-card">
-      <div class="card-stripe stripe-green"></div>
-      <div class="card-body">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Impossible Inc</div>
-            <div class="card-address">55 New Montgomery St, Floor 4, San Francisco CA</div>
-          </div>
-          <span class="status-badge badge-live">🟢 Live</span>
+      <div class="val-card">
+        <div class="val-card-top">
+          <div><div class="val-site-name">Impossible Inc</div><div class="val-site-sub">San Francisco, CA · Standard Install</div></div>
+          <span class="badge live">🟢 Network Live</span>
         </div>
-        <div class="card-meta">
-          <span class="meta-tag">Billing: 2026-03-22</span>
-          <span class="meta-tag">Installer: Zach (CBF)</span>
-          <span class="meta-tag">DE: Sudarsshan Krishna</span>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--green)">45/47 (96%)</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96%;background:var(--green)"></div></div>
         </div>
-        <div class="progress-row">
-          <div class="progress-nums"><span>45 / 47 items confirmed</span><span>96%</span></div>
-          <div class="progress-track"><div class="progress-bar bar-green" style="width:96%"></div></div>
-        </div>
+        <div class="val-meta"><span>👤 Michael</span><span>📅 Live Mar 22</span><span>🔖 Phase 8 — Closeout</span></div>
         <div class="open-items">
-          <div class="open-items-label">Open Items</div>
-          <div class="open-item"><span class="dot-icon">🔌</span>Mikrotik/downstream switch integration — Plan B Monday (Michael unavailable)</div>
-          <div class="open-item"><span class="dot-icon">📋</span>WAN1 backup ISP — N/A at this site</div>
-          <div class="open-item"><span class="dot-icon">📋</span>HA — N/A (single firewall deployment)</div>
+          <div class="open-item">Mikrotik/downstream switch — Plan B Monday</div>
+          <div class="open-item">Technician feedback pending</div>
         </div>
-        <div class="card-actions">
+        <div class="val-actions">
           <a href="https://cthometer.github.io/meter-techops-validation/Impossible_Inc_Checklist.html" class="btn-open green" target="_blank">Open Checklist →</a>
         </div>
       </div>
-      <div class="card-footer">
-        <span>Validation Release: Mar 22 @ 2:33 PM EDT · Clean</span>
-        <span>Refreshed: Mar 22</span>
-      </div>
-    </div>
 
-    <!-- Lahlouh Burlingame -->
-    <div class="site-card">
-      <div class="card-stripe stripe-yellow"></div>
-      <div class="card-body">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Lahlouh — Burlingame</div>
-            <div class="card-address">1649 Adrian Rd, Burlingame CA &nbsp;·&nbsp; Standard Install</div>
-          </div>
-          <span class="status-badge badge-live-cond">🟡 Live (Cond.)</span>
+      <div class="val-card">
+        <div class="val-card-top">
+          <div><div class="val-site-name">Lahlouh — Burlingame</div><div class="val-site-sub">1649 Adrian Rd, Burlingame CA</div></div>
+          <span class="badge conditional">🟡 Conditional Live</span>
         </div>
-        <div class="card-meta">
-          <span class="meta-tag">Billing: 2026-03-21</span>
-          <span class="meta-tag">HA: Validated ✓</span>
-          <span class="meta-tag">Dual ISP ✓</span>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--yellow)">54/56 (96%)</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96%;background:var(--yellow)"></div></div>
         </div>
-        <div class="progress-row">
-          <div class="progress-nums"><span>54 / 56 items confirmed</span><span>96%</span></div>
-          <div class="progress-track"><div class="progress-bar bar-yellow" style="width:96%"></div></div>
-        </div>
+        <div class="val-meta"><span>👤 Zach Gruzd</span><span>📅 Conditional Mar 21</span><span>⚠️ 2 blockers</span></div>
         <div class="open-items">
-          <div class="open-items-label">Open Items</div>
-          <div class="open-item"><span class="dot-icon">🔴</span>Server connectivity — Damian &amp; Alex La Fazia troubleshooting (Nexus switch issue)</div>
-          <div class="open-item"><span class="dot-icon">🟡</span>Client VPN — WireGuard hostname resolution blocker noted</div>
-          <div class="open-item"><span class="dot-icon">📋</span>Tech feedback — Airtable submission pending</div>
+          <div class="open-item">Server connectivity — Nexus switch issue (Damian/Alex)</div>
+          <div class="open-item">Client VPN / WireGuard blocker open</div>
         </div>
-        <div class="card-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Lahlouh_Burlingame_Checklist.html" class="btn-open" target="_blank">Open Checklist →</a>
+        <div class="val-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Lahlouh_Burlingame_Checklist.html" class="btn-open blue" target="_blank">Open Checklist →</a>
         </div>
       </div>
-      <div class="card-footer">
-        <span>Conditional Release: Mar 21 @ 10:56 PM EDT</span>
-        <span>Refreshed: Mar 22</span>
-      </div>
-    </div>
 
+      <div class="val-card">
+        <div class="val-card-top">
+          <div><div class="val-site-name">Solesence — Bolingbrook</div><div class="val-site-sub">Bolingbrook, IL · IPsec Cutover</div></div>
+          <span class="badge cutover">🔵 Cutover In Progress</span>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Confirmed Items</span><span style="font-weight:700;color:var(--blue)">38/128 confirmed</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%;background:var(--blue)"></div></div>
+        </div>
+        <div class="val-meta"><span>👤 Alex La Fazia</span><span>📅 Cutover Mar 21 @ 8AM CT</span><span>🔗 IPsec ✓ AutoVPN ✓</span></div>
+        <div class="open-items">
+          <div class="open-item">Post-cutover validation running</div>
+          <div class="open-item">VLAN 12/13/14 access confirmation pending</div>
+        </div>
+        <div class="val-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Bolingbrook_Cutover_Checklist.html" class="btn-open blue" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+
+      <div class="val-card">
+        <div class="val-card-top">
+          <div><div class="val-site-name">Shack Properties — Asheville</div><div class="val-site-sub">105 Fairview Rd, Asheville NC</div></div>
+          <span class="badge blocked">🔴 Blocked</span>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--red)">11/26 (42%)</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:42%;background:var(--red)"></div></div>
+        </div>
+        <div class="val-meta"><span>👤 DE Unassigned</span><span>📦 SFPs: Mon 10:30 AM</span></div>
+        <div class="open-items">
+          <div class="open-item">SFPs arriving Mon Mar 23 (UPS 1Z166V980123359106)</div>
+          <div class="open-item">Backup MC06 not shipped — device shortage</div>
+          <div class="open-item">AP05, AP08 offline · AP07 removed (painting)</div>
+        </div>
+        <div class="val-actions">
+          <a href="https://cthometer.github.io/meter-techops-validation/Shack_Properties_Asheville_Checklist.html" class="btn-open orange" target="_blank">Open Checklist →</a>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="section-label">🔵 Cutover In Progress</div>
-  <div class="site-grid">
+  <!-- PIPELINE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Upcoming Pipeline — Next 7 Days</div>
+      <span style="font-size:12px;color:var(--muted)">Live from Airtable · 139 jobs next 30 days · Click "Copy Briefing Prompt" → paste into Cowork</span>
+    </div>
 
-    <!-- Solesence Bolingbrook -->
-    <div class="site-card">
-      <div class="card-stripe stripe-blue"></div>
-      <div class="card-body">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Solesence LLC — Bolingbrook</div>
-            <div class="card-address">400 Crossroads Pkwy, Bolingbrook IL 60440 &nbsp;·&nbsp; SW — 6 IDFs</div>
+    <div class="day-group">
+      <div class="day-label">Monday March 23 <span class="today-pill">TODAY</span></div>
+      <div class="pipe-grid">
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Swap Install</div><div class="pipe-site-sub">Job #BYTECUYX · Mitch Meade JO</div></div>
+            <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <span class="status-badge badge-inprog">🔵 In Progress</span>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Patch-In Incomplete</span>
+          </div>
+          <div class="pipe-team"><span>👷 Joseph Petit</span><span>👤 JO: Mitch Meade</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job BYTECUYX — Swap, Joseph Petit, March 23, Mitch Meade JO. Check circuit status, port map, and readiness.')">📋 Copy Briefing Prompt</button>
+            <a href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/recu94O9dByTECUyX" class="btn-sm" target="_blank">Airtable ↗</a>
+          </div>
         </div>
-        <div class="card-meta">
-          <span class="meta-tag">Cutover: Mar 21 @ 8:00 AM</span>
-          <span class="meta-tag">Customer: Isaac (Solesence)</span>
-          <span class="meta-tag">DE: Christian Diaz</span>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard Install</div><div class="pipe-site-sub">Job #NLUT53H9 · Kris Capanpan JO</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill ok"><span class="dot"></span>ISP Patch-In Complete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 David Grantham</span><span>👤 JO: Kris Capanpan</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job NLUT53H9 — Standard install, David Grantham, March 23, Kris Capanpan JO. Check circuit status, port map, and readiness.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1P_IBiYgBYtuu7DOxeoXuXIUzimQkrSegfAdNBPHSFyA/edit?usp=sharing" class="btn-sm success" target="_blank">Work Order ↗</a>
+          </div>
         </div>
-        <div class="progress-row">
-          <div class="progress-nums"><span>~38 / 128 items confirmed</span><span>~30%</span></div>
-          <div class="progress-track"><div class="progress-bar bar-blue" style="width:30%"></div></div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard Install — Premium ⭐</div><div class="pipe-site-sub">Job #3HJSRGDX · Christian Diaz JO</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill ok"><span class="dot"></span>ISP Patch-In Complete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Christian Malcolm</span><span>👤 JO: Christian Diaz</span></div>
+          <div class="notes-box">Premium, Meter ops-led. Suites still under construction — coordinate during kickoff call.</div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job 3HJSRGDX — Premium standard install, Christian Malcolm, March 23, Christian Diaz JO. Meter ops-led, some suites under construction.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/181NAYZu_weJsrPeqfQ3Alg53-M4a0ke9fOn6uy6QeFw/edit?usp=sharing" class="btn-sm success" target="_blank">Work Order ↗</a>
+          </div>
         </div>
-        <div class="open-items">
-          <div class="open-items-label">Confirmed (Slack — Alex La Fazia, Mar 21 10:58 AM)</div>
-          <div class="open-item"><span class="dot-icon">✅</span>Firewalls online · ISP active (199.48.72.122)</div>
-          <div class="open-item"><span class="dot-icon">✅</span>IPsec tunnel UP (Azure, IKEv2/AES-256)</div>
-          <div class="open-item"><span class="dot-icon">✅</span>AutoVPN active (Bolingbrook ↔ Romeoville)</div>
-          <div class="open-item"><span class="dot-icon">⏳</span>Isaac's validation testing — status unknown</div>
-          <div class="open-item"><span class="dot-icon">⏳</span>Validation release NOT yet posted · Network NOT yet live</div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Reactivation</div><div class="pipe-site-sub">Job #K7BYHROJ · Marianna Mao JO</div></div>
+            <span class="job-type-badge jt-reactivation">Reactivation</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill warn"><span class="dot"></span>ISP by Customer</span>
+            <span class="pill fail"><span class="dot"></span>No WO</span>
+          </div>
+          <div class="pipe-team"><span>👤 JO: Marianna Mao</span></div>
+          <div class="notes-box">Pre-installed space. ISP procured by customer and already in place.</div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job K7BYHROJ — Reactivation, March 23, Marianna Mao JO. Pre-installed space, ISP by customer.')">📋 Copy Briefing Prompt</button>
+            <a href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/recxvyqTmK7byhROJ" class="btn-sm" target="_blank">Airtable ↗</a>
+          </div>
         </div>
-        <div class="card-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Bolingbrook_Cutover_Checklist.html" class="btn-open" target="_blank">Open Checklist →</a>
-        </div>
-      </div>
-      <div class="card-footer">
-        <span>Pre-deploy sync: Mar 20 @ meeting &nbsp;·&nbsp; Cutover: Mar 21</span>
-        <span>Refreshed: Mar 22</span>
+
       </div>
     </div>
 
-  </div>
+    <div class="day-group">
+      <div class="day-label">Tuesday March 24</div>
+      <div class="pipe-grid">
 
-  <div class="section-label">🔴 Blocked — Hardware Issues</div>
-  <div class="site-grid">
-
-    <!-- Shack Properties -->
-    <div class="site-card">
-      <div class="card-stripe stripe-red"></div>
-      <div class="card-body">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Shack Properties LLC — Asheville</div>
-            <div class="card-address">105 Fairview Rd, Asheville NC 28803 &nbsp;·&nbsp; Suites 10 &amp; 30 (SI-013026)</div>
+        <div class="pipe-card live-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Swap Install <span class="live-banner"><span class="live-dot"></span>LIVE</span></div><div class="pipe-site-sub">Job #PH6BPIVO · Mitch Meade JO</div></div>
+            <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <span class="status-badge badge-blocked">🔴 Blocked</span>
+          <div class="readiness-row">
+            <span class="pill ok"><span class="dot"></span>ISP Complete</span>
+            <span class="pill ok"><span class="dot"></span>Network Live ✓</span>
+          </div>
+          <div class="pipe-team"><span>👷 Yoandrys Gonzales</span><span>👤 JO: Mitch Meade</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Run field validation for Job PH6BPIVO — Swap, Yoandrys Gonzales, Mitch Meade JO. Network is live — generate post-cutover validation checklist.')">📋 Generate Validation</button>
+            <a href="https://docs.google.com/document/d/1LcIWiwZu3Ky3jhKEngrdF2tAOq8NWjrtSuk6ulmHARs/edit?tab=t.0" class="btn-sm success" target="_blank">Work Order ↗</a>
+          </div>
         </div>
-        <div class="card-meta">
-          <span class="meta-tag">Install Day 4 (Mar 18–20)</span>
-          <span class="meta-tag">Resuming: Mon 3/23</span>
-          <span class="meta-tag">Job Owner: Christian Diaz</span>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Swap Install</div><div class="pipe-site-sub">Job #RT6EEGCU · Mitch Meade JO</div></div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+          </div>
+          <div class="pipe-team"><span>👷 Yoandrys Gonzales</span><span>👤 JO: Mitch Meade</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job RT6EEGCU — Swap, Yoandrys Gonzales, March 24, Mitch Meade JO.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1P3ega7PpEPvB1GYwGQYu3eDnAi0JInDeaduk3CgWpqg/edit?usp=sharing" class="btn-sm success" target="_blank">Work Order ↗</a>
+          </div>
         </div>
-        <div class="progress-row">
-          <div class="progress-nums"><span>11 / 26 items confirmed</span><span>Physical install done</span></div>
-          <div class="progress-track"><div class="progress-bar bar-red" style="width:42%"></div></div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Pre-Install (×3 sites)</div><div class="pipe-site-sub">Jobs VIFHPC52 / RMGLDQVQ / 3PMDNBSG · Marianna Mao JO</div></div>
+            <span class="job-type-badge jt-preinstall">Pre-Install</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete ×3</span>
+          </div>
+          <div class="pipe-team"><span>👤 JO: Marianna Mao</span></div>
+          <div class="notes-box">⚠️ Three pre-install jobs due 3/24. All circuit patch-ins incomplete — flag circuit team for follow-up.</div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Jobs VIFHPC52, RMGLDQVQ, 3PMDNBSG — Pre-installs, March 24, Marianna Mao JO. Check circuit status for all three sites and flag any blockers.')">📋 Copy Briefing Prompt</button>
+          </div>
         </div>
-        <div class="open-items">
-          <div class="open-items-label">Blockers</div>
-          <div class="open-item"><span class="dot-icon">🔴</span>SFPs in transit — UPS overnight 1Z166V980123359106 · Expected Mon 3/23 by 10:30 AM</div>
-          <div class="open-item"><span class="dot-icon">🔴</span>Backup MC06 firewall not shipped — device shortage, no ETA · HA blocked</div>
-          <div class="open-item"><span class="dot-icon">🔴</span>IDF switches not connected to MDF · AP05 &amp; AP08 offline</div>
-          <div class="open-item"><span class="dot-icon">🟡</span>AP07 removed (customer painting) · Spare pending MAC/SN from Jake Mon AM</div>
-          <div class="open-item"><span class="dot-icon">🟡</span>DE unassigned — flag to Mitchell / Koosha</div>
-        </div>
-        <div class="card-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Shack_Properties_Asheville_Checklist.html" class="btn-open" target="_blank">Open Checklist →</a>
-        </div>
-      </div>
-      <div class="card-footer">
-        <span>Last update: Mar 22 @ 10:06 PM EDT (Faye, next owner)</span>
-        <span>Refreshed: Mar 22</span>
+
       </div>
     </div>
 
+    <div class="day-group">
+      <div class="day-label">Wednesday–Friday March 25–27</div>
+      <div class="pipe-grid">
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard Install — Premium</div><div class="pipe-site-sub">Job #T7WIPNWI · Christian Diaz JO · Mar 25</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Matthew Valdes</span><span>👤 JO: Christian Diaz</span></div>
+          <div class="notes-box">No partner. Premium deal.</div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job T7WIPNWI — Premium standard install, Matthew Valdes, March 25, Christian Diaz JO. No partner.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1q3yv-SDeq2GlU6YbWjikFzjIOO79iHy9jgpKYfaKTIk/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">🇬🇧 New Build — Milton Keynes</div><div class="pipe-site-sub">33 Alston Dr, MK13 9HA · Kris Capanpan JO · Mar 27</div></div>
+            <span class="job-type-badge jt-newbuild">New Build</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill warn"><span class="dot"></span>UK Timezone</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Dan Tuttle</span><span>👤 JO: Kris Capanpan</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job UFYY1HAK — New Build, 33 Alston Drive Milton Keynes MK13 9HA UK, Dan Tuttle, March 27, Kris Capanpan JO. UK timezone coordination required.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1UaIMg97pcyRRNhkTcQRsWieGnsn-OkVOsHrOGvgX1ZM/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">🇬🇧 New Build — Nottingham</div><div class="pipe-site-sub">1 Thoroton St, NG7 4EW · Kris Capanpan JO · Mar 27</div></div>
+            <span class="job-type-badge jt-newbuild">New Build</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill warn"><span class="dot"></span>UK Timezone</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Dan Tuttle</span><span>👤 JO: Kris Capanpan</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job D6SS8YSH — New Build, 1 Thoroton Street Nottingham NG7 4EW UK, Dan Tuttle, March 27, Kris Capanpan JO.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/14HQSBZXLFqLRz5RZMj_lxRiKCvObzXhPe_UbmEGn9dc/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard (×3) — Lawrence/Pittsburg/Edmond</div><div class="pipe-site-sub">KS + OK · Liam Weld JO · Mar 27</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete ×3</span>
+          </div>
+          <div class="pipe-team"><span>👤 JO: Liam Weld</span></div>
+          <div class="notes-box">3312 Clinton Pkwy Lawrence KS · 1102 S Rouse St Pittsburg KS · 825 S Kelley Ave Edmond OK</div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Jobs 55K5EYEB, 9BZCAT7C, EWQVYYJA, DSYSLAS9 — Multi-site standard installs, Liam Weld JO, March 27. Lawrence KS, Pittsburg KS, Edmond OK. Check circuits for all.')">📋 Copy Briefing Prompt</button>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard — Zach Gruzd</div><div class="pipe-site-sub">Job #Y5Z0EDGA · Christian Diaz JO · Mar 27</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Zach Gruzd</span><span>👤 JO: Christian Diaz</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job Y5Z0EDGA — Standard install, Zach Gruzd, March 27, Christian Diaz JO.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1HR4zwDWOTvEP6PPE4RwccpmEFlzg3jw1EeH-TicjXlw/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard — Brian Jones</div><div class="pipe-site-sub">Job #KCW2VXGY · Sudarsshan Krishna JO · Mar 27</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Brian Jones</span><span>👤 JO: Sudarsshan Krishna</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job KCW2VXGY — Standard install, Brian Jones, March 27, Sudarsshan Krishna JO.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1-_rGjMr1M9Ankpy5MHJU8Pftec-lIpjaY9-RvuosmSg/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="day-group">
+      <div class="day-label">Monday March 30</div>
+      <div class="pipe-grid">
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Swap — CentroMed San Antonio</div><div class="pipe-site-sub">6315 S Zarzamora St, San Antonio TX</div></div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Ramon Rendon</span><span>👤 JO: Sudarsshan Krishna</span></div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job QJQ5KNKJ — Swap at CentroMed 6315 S Zarzamora San Antonio TX, Ramon Rendon, March 30, Sudarsshan JO.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/18XbiIwT_HUTLJVneL1OyZxAbxP7in9_QyjaG61UYobw/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div><div class="pipe-site">Standard — Aaru New Office (rebooking)</div><div class="pipe-site-sub">Job #HENIYXTA · Andrea Vezeau JO · Mar 27</div></div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="readiness-row">
+            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          </div>
+          <div class="pipe-team"><span>👷 Anthony Derin</span><span>👤 JO: Andrea Vezeau</span></div>
+          <div class="notes-box">Rebooking from original Aaru project.</div>
+          <div class="pipe-actions">
+            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job HENIYXTA — Standard install, Aaru new office rebooking, Anthony Derin, Andrea Vezeau JO.')">📋 Copy Briefing Prompt</button>
+            <a href="https://docs.google.com/document/d/1qIn8jgcwEdFgNLF7jZ3b08tz0Ajqwy4rzThzdCaw8d0/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
-  <!-- Reference Info -->
-  <div class="info-section">
-    <h3>📌 Quick Reference — Key Contacts &amp; Resources</h3>
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="label">Solesence Customer POC</div>
-        <div class="value">Isaac Diaz — idiaz@solesence.com</div>
+  <!-- HOW TO USE -->
+  <div class="section">
+    <div class="section-header"><div class="section-title">Site Intelligence Workflow</div></div>
+    <div class="how-to-box">
+      <div class="how-to-col">
+        <h4>🚀 Generate a Site Briefing Packet</h4>
+        <div class="how-step"><div class="step-num">1</div><div>Click <strong>"Copy Briefing Prompt"</strong> on any site card — copies a pre-filled query to clipboard.</div></div>
+        <div class="how-step"><div class="step-num">2</div><div>Open <strong>Cowork (Claude)</strong> and paste the prompt. No additional setup needed.</div></div>
+        <div class="how-step"><div class="step-num">3</div><div>Claude searches Airtable, Slack, Intercom, and Google Drive, then generates a full briefing packet with circuit status, port map links, tech contacts, and a readiness score.</div></div>
+        <div class="how-step"><div class="step-num">4</div><div>The briefing is pushed to GitHub Pages and a shareable link is returned.</div></div>
       </div>
-      <div class="info-item">
-        <div class="label">Shack Properties UPS Tracking</div>
-        <div class="value">1Z166V980123359106</div>
-      </div>
-      <div class="info-item">
-        <div class="label">Lahlouh Server Issue</div>
-        <div class="value">Damian McKenzie &amp; Alex La Fazia — Nexus switch remediation</div>
-      </div>
-      <div class="info-item">
-        <div class="label">Impossible Inc — Open Monday</div>
-        <div class="value">Mikrotik switch integration — Michael (Impossible Inc POC)</div>
-      </div>
-      <div class="info-item">
-        <div class="label">CentroMed Guadalupe DE</div>
-        <div class="value">Sudarsshan Krishna — mark network live</div>
-      </div>
-      <div class="info-item">
-        <div class="label">Solesence Azure Gateway</div>
-        <div class="value">40.122.152.221 · Remote ID: same as Romeoville</div>
-      </div>
-      <div class="info-item">
-        <div class="label">Shack Properties Dashboard</div>
-        <div class="value"><a href="https://dashboard.meter.com/network/019c1115-b180-2bbc-9ded-9232acdc7dea" target="_blank" style="color:#2563eb;">View Dashboard →</a></div>
-      </div>
-      <div class="info-item">
-        <div class="label">CentroMed Guadalupe Dashboard</div>
-        <div class="value"><a href="https://dashboard.meter.com/org/centromed/network/guadalupe-street/insights/network" target="_blank" style="color:#2563eb;">View Dashboard →</a></div>
+      <div class="how-to-col">
+        <h4>🔍 Query Any Site Directly</h4>
+        <div style="font-size:13px;margin-bottom:8px;">Open Cowork and use any of these prompts:</div>
+        <div class="prompt-box">Pull site brief for [Customer / Address / Job ID]
+
+Run field validation for [Site Name]
+
+Show me all ISP blockers this week
+
+What sites are active today?
+
+Refresh the pipeline hub
+
+Check circuit status for [Job ID]</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted);">💡 <strong>Tip:</strong> Claude also pulls port map links from the Work Order (Rack Elevation & Patch Panel Layout field) and flags if circuit fulfillment is missing so you can reach out to the circuit team proactively.</div>
       </div>
     </div>
   </div>
 
 </div>
 
-<footer>
-  Meter Tech Ops — Partner Ops Validation Hub &nbsp;·&nbsp; Generated March 22, 2026 &nbsp;·&nbsp; For internal review only
-</footer>
-
 <script>
-  function updateClock() {
-    const now = new Date();
-    const opts = { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-    document.getElementById('clock').textContent = now.toLocaleString('en-US', opts) + ' ET';
+function copyPrompt(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
   }
-  updateClock();
-  setInterval(updateClock, 30000);
+  // Visual feedback on all primary buttons
+  document.querySelectorAll('.btn-sm.primary').forEach(btn => {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(text.substring(0, 25).replace(/['"]/g, ''))) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied to clipboard!';
+      btn.style.background = 'rgba(34,197,94,0.2)';
+      btn.style.borderColor = 'rgba(34,197,94,0.5)';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.cssText = ''; }, 2200);
+    }
+  });
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
 </script>
-
 </body>
 </html>
