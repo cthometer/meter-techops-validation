@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Brief · T7WIPNWI · Tines Boston · 99 High St 14F</title>
+<style>
+  :root {
+    --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
+    --yellow: #d97706; --yellow-bg: #fffbeb; --yellow-border: #fde68a;
+    --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+    --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+    --gray: #6b7280; --gray-bg: #f9fafb; --gray-border: #e5e7eb;
+    --orange: #ea580c; --orange-bg: #fff7ed; --orange-border: #fed7aa;
+    --purple: #7c3aed; --purple-bg: #f5f3ff; --purple-border: #ddd6fe;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; font-size: 14px; }
+
+  .topbar { background: #0f172a; color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .meter-logo { font-weight: 800; font-size: 15px; color: #60a5fa; }
+  .topbar-title { font-size: 13px; color: #cbd5e1; margin-left: 12px; }
+  .topbar-right { font-size: 11px; color: #64748b; }
+  .topbar-left { display: flex; align-items: center; }
+
+  .alert-banner { background: #7c2d12; color: #fed7aa; padding: 10px 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  /* HERO */
+  .hero { background: white; border-radius: 12px; border: 2px solid #fecaca; padding: 20px 24px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
+  .hero-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+  .hero-subtitle { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 7px; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge-gray { background: var(--gray-bg); color: var(--gray); border: 1px solid var(--gray-border); }
+  .badge-orange { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+  .readiness-score { font-size: 36px; font-weight: 800; color: var(--yellow); line-height: 1; text-align: center; }
+  .readiness-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+
+  /* STATUS PILLS */
+  .status-bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 16px; }
+  .status-pill { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 8px; text-align: center; }
+  .pill-icon { font-size: 18px; }
+  .pill-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 3px; }
+  .pill-value { font-size: 11px; font-weight: 700; margin-top: 2px; }
+  .pill-green .pill-value { color: var(--green); }
+  .pill-yellow .pill-value { color: var(--yellow); }
+  .pill-red .pill-value { color: var(--red); }
+  .pill-orange .pill-value { color: var(--orange); }
+
+  /* BLOCKER BOX */
+  .blocker-box { background: #fff1f2; border: 2px solid #fca5a5; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; }
+  .blocker-title { font-size: 15px; font-weight: 800; color: #991b1b; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .blocker-subtitle { font-size: 12px; color: #b91c1c; margin-bottom: 12px; }
+  .blocker-item { display: flex; gap: 10px; padding: 10px 12px; background: white; border: 1px solid #fecaca; border-radius: 8px; margin-bottom: 8px; }
+  .blocker-item:last-child { margin-bottom: 0; }
+  .blocker-num { font-size: 18px; font-weight: 900; color: #dc2626; min-width: 28px; }
+  .blocker-content { flex: 1; }
+  .blocker-content .b-title { font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 3px; }
+  .blocker-content .b-detail { font-size: 12px; color: #475569; line-height: 1.5; }
+  .blocker-who { font-size: 11px; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 8px; font-weight: 700; white-space: nowrap; align-self: flex-start; margin-top: 2px; }
+
+  /* DELIVERY BOX */
+  .delivery-box { background: #fff7ed; border: 2px solid #fed7aa; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; }
+  .delivery-title { font-size: 13px; font-weight: 800; color: #92400e; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .delivery-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #fde68a; font-size: 13px; }
+  .delivery-row:last-child { border-bottom: none; }
+  .delivery-eo { font-weight: 800; color: #92400e; min-width: 60px; }
+  .delivery-desc { flex: 1; color: #1e293b; }
+  .delivery-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+  .d-delivered { background: var(--green-bg); color: var(--green); }
+  .d-transit { background: var(--yellow-bg); color: var(--yellow); }
+
+  /* CARDS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 800px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 16px; }
+  .card-full { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 16px; }
+  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
+  .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; gap: 8px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: #64748b; flex-shrink: 0; font-weight: 500; }
+  .info-value { color: #0f172a; text-align: right; font-weight: 600; word-break: break-word; }
+  .info-value a { color: var(--blue); text-decoration: none; }
+  .info-value a:hover { text-decoration: underline; }
+
+  /* TOPOLOGY */
+  .topo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .topo-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+  .topo-label { font-size: 10px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; font-weight: 700; }
+  .topo-value { font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 3px; }
+  .topo-note { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .check-text { flex: 1; line-height: 1.4; }
+  .check-note { font-size: 11px; color: #64748b; display: block; }
+  .check-status { font-size: 11px; padding: 2px 7px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+  .status-done { background: var(--green-bg); color: var(--green); }
+  .status-pending { background: var(--yellow-bg); color: var(--yellow); }
+  .status-blocked { background: var(--red-bg); color: var(--red); }
+  .status-transit { background: var(--orange-bg); color: var(--orange); }
+  .status-na { background: var(--gray-bg); color: var(--gray); }
+
+  /* TIMELINE */
+  .timeline { padding: 0; }
+  .tl-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dot-red { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-green { background: var(--green); }
+  .dot-blue { background: var(--blue); }
+  .dot-orange { background: var(--orange); }
+  .tl-body { flex: 1; }
+  .tl-date { font-size: 11px; color: #94a3b8; font-weight: 700; margin-bottom: 3px; }
+  .tl-text { font-size: 13px; color: #1e293b; line-height: 1.5; }
+  .tl-who { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+  /* QUOTE BOX */
+  .quote-box { background: #f8fafc; border-left: 4px solid #94a3b8; padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 12px; color: #475569; line-height: 1.6; }
+
+  /* LINKS */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; }
+  .link-card { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #1e293b; font-size: 13px; font-weight: 600; transition: all 0.15s; background: white; }
+  .link-card:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+
+  /* ISP CALLOUT */
+  .isp-callout { background: #fffbeb; border: 2px solid #fde047; border-radius: 8px; padding: 12px 16px; margin-top: 10px; font-size: 12px; color: #713f12; line-height: 1.5; }
+
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 20px; margin-top: 8px; }
+
+  .section-divider { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin: 16px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="meter-logo">⚡ Meter</span>
+    <span class="topbar-title">Partner-Ops · Site Intelligence Brief</span>
+  </div>
+  <div class="topbar-right">Generated March 24, 2026 · Job T7WIPNWI</div>
+</div>
+
+<div class="alert-banner">
+  🔥 ACTIVE INSTALL — TGL TOMORROW 3/25 · 3 BLOCKERS MUST BE RESOLVED TODAY BEFORE TECH RETURNS · NO BUFFER
+</div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-title">Tines — Boston, MA</div>
+      <div class="hero-subtitle">99 High Street · 14th Floor · Boston, MA 02110 · Premium, No Partner</div>
+      <div class="hero-meta">
+        <span class="badge badge-blue">📦 Standard Install (Premium)</span>
+        <span class="badge badge-red">⚠️ AT RISK</span>
+        <span class="badge badge-red">ISP: Incomplete</span>
+        <span class="badge badge-orange">TGL: 3/25 TOMORROW</span>
+        <span class="badge badge-yellow">Day 1 Complete — Tech returns 3/25</span>
+        <span class="badge badge-gray">JO: Christian Diaz</span>
+        <span class="badge badge-gray">Tech: Matthew Valdes (Trellis Networks)</span>
+        <span class="badge badge-red">Deployment Engineer: Unassigned ⚠️</span>
+      </div>
+    </div>
+    <div>
+      <div class="readiness-score">52%</div>
+      <div class="readiness-label">Day 1 Done</div>
+      <div style="margin-top:8px;"><span class="badge badge-red">3 BLOCKERS TODAY</span></div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="status-pill pill-green">
+      <div class="pill-icon">📦</div>
+      <div class="pill-label">Main EQ</div>
+      <div class="pill-value">Delivered ✓</div>
+    </div>
+    <div class="status-pill pill-orange">
+      <div class="pill-icon">🚚</div>
+      <div class="pill-label">ISP Kit</div>
+      <div class="pill-value">In Transit</div>
+    </div>
+    <div class="status-pill pill-orange">
+      <div class="pill-icon">🚚</div>
+      <div class="pill-label">MS12 Switches</div>
+      <div class="pill-value">In Transit</div>
+    </div>
+    <div class="status-pill pill-red">
+      <div class="pill-icon">🔌</div>
+      <div class="pill-label">ISP Patch-In</div>
+      <div class="pill-value">Incomplete</div>
+    </div>
+    <div class="status-pill pill-yellow">
+      <div class="pill-icon">🛠️</div>
+      <div class="pill-label">Install</div>
+      <div class="pill-value">Day 1/3 Done</div>
+    </div>
+    <div class="status-pill pill-red">
+      <div class="pill-icon">🌐</div>
+      <div class="pill-label">Network Live</div>
+      <div class="pill-value">Not Started</div>
+    </div>
+  </div>
+
+  <!-- BLOCKER BOX -->
+  <div class="blocker-box">
+    <div class="blocker-title">🚧 3 Blockers Must Be Resolved TODAY (3/24) Before Matthew Returns Wednesday</div>
+    <div class="blocker-subtitle">Matthew Valdes confirmed he cannot return on 3/25 without all three items resolved. TGL is 3/25 — no buffer.</div>
+
+    <div class="blocker-item">
+      <span class="blocker-num">1</span>
+      <div class="blocker-content">
+        <div class="b-title">Confirm EO-5434 (1G ISP Kit / SFP Module) Delivered to Site</div>
+        <div class="b-detail">Lightpath provided a fiber handoff but NO fiber SFP module was on-site — only copper. EO-5434 (1G ISP Kit) is shipping FedEx Standard Overnight (tracking: 399868156692), estimated delivery 3/24 before 5 PM (est. 9:30 AM–1:30 PM). Once it arrives, Matthew needs confirmation before he commits to returning.</div>
+      </div>
+      <span class="blocker-who">Faye / Sthephanie</span>
+    </div>
+
+    <div class="blocker-item">
+      <span class="blocker-num">2</span>
+      <div class="blocker-content">
+        <div class="b-title">Confirm EO-5439 (2× MS12 Core Switches) Delivered to Site</div>
+        <div class="b-detail">Core switches (2× MS12) were ordered as EO-5439 per JP Garcia on 3/23. Shipping UPS Next Day Air (tracking: 1Z166V980112253973), ETA 3/24 by 10:30 AM. These are required for the updated topology (4× MS10 access + 2× MS12 core). Also advise Matthew which 2 of the 4 spare MS10s = MDF-A01 and MDF-A02.</div>
+      </div>
+      <span class="blocker-who">Faye / JP Garcia</span>
+    </div>
+
+    <div class="blocker-item">
+      <span class="blocker-num">3</span>
+      <div class="blocker-content">
+        <div class="b-title">Send Matthew Updated Non-HA Topology Before Wednesday</div>
+        <div class="b-detail">Customer (Christina Troy, Tines) confirmed no backup ISP and non-HA deployment. Christian updated to: 1× SA only (no backup firewall), 4× MS10 access switches, 2× MS12 core switches, no backup ISP. JP Garcia updated the WO and dashboard on 3/23. Send the updated topology doc/WO to Matthew and confirm he has what he needs before 3/25. Also: JP needs to update AP radio config with Hamina (flagged by Elvirlee).</div>
+      </div>
+      <span class="blocker-who">Christian / JP Garcia</span>
+    </div>
+  </div>
+
+  <!-- DELIVERY STATUS -->
+  <div class="delivery-box">
+    <div class="delivery-title">🚚 Equipment Delivery Tracker — Must Confirm Arrivals Today</div>
+    <div class="delivery-row">
+      <span class="delivery-eo">EO-5343</span>
+      <span class="delivery-desc">Main hardware (5 items — primary SA, switches, PDUs, APs)<br><small style="color:#64748b;">UPS Next Day Air · 1Z166V980129604839 · Delivered to 99 High St 14F</small></span>
+      <span class="delivery-status d-delivered">✅ Delivered 3/19</span>
+    </div>
+    <div class="delivery-row">
+      <span class="delivery-eo">EO-5434</span>
+      <span class="delivery-desc"><strong>1G ISP Kit / SFP Module</strong> — required for Lightpath fiber handoff<br><small style="color:#64748b;">FedEx Standard Overnight · 399868156692 · Est. 9:30 AM–1:30 PM, before 5 PM</small></span>
+      <span class="delivery-status d-transit">🚚 In Transit</span>
+    </div>
+    <div class="delivery-row">
+      <span class="delivery-eo">EO-5439</span>
+      <span class="delivery-desc"><strong>2× MS12 Core Switches</strong> — required for updated topology<br><small style="color:#64748b;">UPS Next Day Air · 1Z166V980112253973 · Est. by 10:30 AM</small></span>
+      <span class="delivery-status d-transit">🚚 In Transit</span>
+    </div>
+  </div>
+
+  <!-- TEAM + JOB DETAILS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Job Details</div>
+      <div class="info-row"><span class="info-label">Job ID</span><span class="info-value">T7WIPNWI</span></div>
+      <div class="info-row"><span class="info-label">Job Type</span><span class="info-value">Standard Install (Premium)</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-value" style="color:var(--red)">AT RISK · Job Started</span></div>
+      <div class="info-row"><span class="info-label">TGL</span><span class="info-value" style="color:var(--orange)">March 25, 2026 — TOMORROW</span></div>
+      <div class="info-row"><span class="info-label">Install Schedule</span><span class="info-value">3 days · Started 3/23 at 6:30 AM ET</span></div>
+      <div class="info-row"><span class="info-label">Site Scope</span><span class="info-value">Office · 20k–30k sq ft · 0–5k sq ft WO scope</span></div>
+      <div class="info-row"><span class="info-label">HA Status</span><span class="info-value" style="color:var(--yellow)">Non-HA — Customer declined backup ISP</span></div>
+      <div class="info-row"><span class="info-label">Network ID</span><span class="info-value" style="font-size:11px">019be9b1-28d4-51c8-127e-41c7b8a9565c</span></div>
+      <div class="info-row"><span class="info-label">AP Count</span><span class="info-value">16 APs · MW08 (all cabled, mounted, labeled ✅)</span></div>
+      <div class="info-row"><span class="info-label">Partner</span><span class="info-value" style="color:var(--gray)">No partner — premium direct deal</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Team Contacts</div>
+      <div class="info-row"><span class="info-label">Job Owner</span><span class="info-value">Christian Diaz<br><a href="mailto:christian@meter.com">christian@meter.com</a></span></div>
+      <div class="info-row"><span class="info-label">Technician</span><span class="info-value">Matthew Valdes · Trellis Networks<br><a href="tel:2014215261">(201) 421-5261</a></span></div>
+      <div class="info-row"><span class="info-label">Install Coord.</span><span class="info-value">Sthephanie Esguerra (Faye)<br>sthephanie.esguerra@meter.com</span></div>
+      <div class="info-row"><span class="info-label">Wireless Design</span><span class="info-value">JP Garcia · jp.garcia@meter.com</span></div>
+      <div class="info-row"><span class="info-label">Scheduling</span><span class="info-value">Rhea Shah</span></div>
+      <div class="info-row"><span class="info-label">Opp. Owner</span><span class="info-value">Michelle Aspis · michelle@meter.com<br>Lance Romigh</span></div>
+      <div class="info-row"><span class="info-label">Deploy Engineer</span><span class="info-value" style="color:var(--red)">⚠️ Unassigned</span></div>
+      <div class="info-row"><span class="info-label">Customer POC</span><span class="info-value">Christina Troy (Tines)<br><a href="tel:9786024198">(978) 602-4198</a> · ckokoros@tines.io</span></div>
+    </div>
+  </div>
+
+  <!-- TOPOLOGY -->
+  <div class="card-full">
+    <div class="card-title">Network Topology — Updated 3/23 (Non-HA)</div>
+    <div style="background:#fef9c3; border:1px solid #fde047; border-radius:6px; padding:10px 14px; margin-bottom:12px; font-size:12px; color:#713f12; font-weight:600;">
+      ⚠️ Topology was changed on Day 1: Original spec had HA + backup ISP. Customer declined backup ISP. Updated to non-HA single-SA deployment. WO and Dashboard updated by JP Garcia on 3/23. Topology doc must be shared with Matthew before 3/25.
+    </div>
+    <div class="topo-grid">
+      <div class="topo-item">
+        <div class="topo-label">Firewall (SA)</div>
+        <div class="topo-value">1× Primary SA only</div>
+        <div class="topo-note">Non-HA · No backup SA · Original spec had secondary</div>
+      </div>
+      <div class="topo-item">
+        <div class="topo-label">Core Switches</div>
+        <div class="topo-value">2× MS12 (EO-5439)</div>
+        <div class="topo-note">In transit via UPS NDA · ETA today 10:30 AM</div>
+      </div>
+      <div class="topo-item">
+        <div class="topo-label">Access Switches</div>
+        <div class="topo-value">4× MS10 (spare)</div>
+        <div class="topo-note">MS11 was spec'd but unavailable · 4 unlabeled spares on-site. Matthew needs to know which 2 = MDF-A01/A02</div>
+      </div>
+      <div class="topo-item">
+        <div class="topo-label">APs</div>
+        <div class="topo-value">16× MW08 ✅</div>
+        <div class="topo-note">All cabled, mounted, labeled on Day 1. AP radio config needs Hamina update (JP flagged)</div>
+      </div>
+      <div class="topo-item">
+        <div class="topo-label">PDUs</div>
+        <div class="topo-value">MDF-PDU1 + MDF-PDU2 ✅</div>
+        <div class="topo-note">Racked and labeled Day 1</div>
+      </div>
+      <div class="topo-item">
+        <div class="topo-label">ISP</div>
+        <div class="topo-value">Lightpath (fiber)</div>
+        <div class="topo-note">Fiber handoff on-site · No SFP module yet. EO-5434 ISP kit in transit. No backup ISP.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ISP STATUS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">ISP / Circuit Status</div>
+      <div class="info-row"><span class="info-label">ISP Provider</span><span class="info-value">Lightpath (fiber)</span></div>
+      <div class="info-row"><span class="info-label">WAN0 (Primary)</span><span class="info-value" style="color:var(--red)">⛔ Not patched — awaiting SFP module</span></div>
+      <div class="info-row"><span class="info-label">WAN1 (Backup)</span><span class="info-value" style="color:var(--gray)">N/A — customer declined backup ISP</span></div>
+      <div class="info-row"><span class="info-label">ISP Handoff</span><span class="info-value" style="color:var(--green)">Fiber on-site ✅</span></div>
+      <div class="info-row"><span class="info-label">SFP Module</span><span class="info-value" style="color:var(--orange)">🚚 En route via EO-5434</span></div>
+      <div class="info-row"><span class="info-label">ISP Test Patch-In</span><span class="info-value" style="color:var(--red)">Incomplete (cannot do without SFP)</span></div>
+      <div class="info-row"><span class="info-label">Circuit Records</span><span class="info-value" style="color:var(--yellow)">⚠️ None in Meter Circuits table</span></div>
+      <div class="isp-callout">
+        📋 ISP bid correction (3/20): Original bid had ISP patch-in at $1,375 (error). Corrected to $137.50. Revised bid and COIs uploaded by Rhea Shah 3/20. <strong>Lightpath circuit record needs to be created in Toolshed → Circuits.</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Port Map &amp; Topology Documents</div>
+      <ul class="checklist">
+        <li>
+          <span class="check-icon">📄</span>
+          <span class="check-text">Work Order (Google Doc) — updated 3/23 by JP Garcia for non-HA topology
+            <span class="check-note">Includes MS10 swap, non-HA config, ISP details</span>
+          </span>
+          <span class="check-status status-done"><a href="https://docs.google.com/document/d/1q3yv-SDeq2GlU6YbWjikFzjIOO79iHy9jgpKYfaKTIk/edit?usp=sharing" target="_blank" style="color:var(--green);text-decoration:none;">Open ↗</a></span>
+        </li>
+        <li>
+          <span class="check-icon">📐</span>
+          <span class="check-text">Hamina Wireless Design — AP placement, coverage
+            <span class="check-note">⚠️ AP radio config needs update (Elvirlee → JP, 3/23 11PM)</span>
+          </span>
+          <span class="check-status status-pending"><a href="https://us.hamina.com/share/e224704f-af31-430b-a16f-4fee006ece4f" target="_blank" style="color:var(--yellow);text-decoration:none;">Open ↗</a></span>
+        </li>
+        <li>
+          <span class="check-icon">📎</span>
+          <span class="check-text">Installation Work Order PDF — attached to Airtable record (Tines WO)
+            <span class="check-note">Pre-updated version; JP's 3/23 update is in Google Doc</span>
+          </span>
+          <span class="check-status status-done">In Airtable</span>
+        </li>
+        <li>
+          <span class="check-icon">📸</span>
+          <span class="check-text">CompanyCam — 1/15 completed (7%)
+            <span class="check-note">Data drop photos not taken. All documentation deferred to Day 3 (3/25)</span>
+          </span>
+          <span class="check-status status-blocked"><a href="https://app.companycam.com/projects/97692100" target="_blank" style="color:var(--red);text-decoration:none;">7% ↗</a></span>
+        </li>
+        <li>
+          <span class="check-icon">📋</span>
+          <span class="check-text">Tines site floor plan (PDF) — Tines_S1_011526.pdf attached to job</span>
+          <span class="check-status status-done">In Airtable</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PRE-CUTOVER CHECKLIST -->
+  <div class="card-full">
+    <div class="card-title">Full Install Checklist — Current Status</div>
+    <div class="section-divider">Day 1 — Completed 3/23</div>
+    <ul class="checklist">
+      <li><span class="check-icon">✅</span><span class="check-text">Tech on-site — Matthew Valdes, 6:30 AM ET</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Inventory and labeling completed (toned existing CAT6, relabeled patch panel)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">All 16 AP CAT6 lines in place, labeled both sides, and tested</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">All 16 APs mounted and labeled</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Primary Firewall (SA), MDF-ISP01, MDF-ISP02, MDF-PDU1, MDF-PDU2 racked and labeled</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Lightpath fiber ISP handoff confirmed on-site</span><span class="check-status status-done">On-site</span></li>
+    </ul>
+
+    <div class="section-divider">Today (3/24) — Must Resolve Before Matthew Returns</div>
+    <ul class="checklist">
+      <li><span class="check-icon">⛔</span><span class="check-text">Confirm EO-5434 delivered (1G ISP Kit/SFP module) — FedEx est. 9:30 AM–1:30 PM<span class="check-note">Communicate delivery to Matthew once confirmed</span></span><span class="check-status status-transit">In Transit</span></li>
+      <li><span class="check-icon">⛔</span><span class="check-text">Confirm EO-5439 delivered (2× MS12 core switches) — UPS est. by 10:30 AM<span class="check-note">Required for updated topology</span></span><span class="check-status status-transit">In Transit</span></li>
+      <li><span class="check-icon">⛔</span><span class="check-text">Advise Matthew which 2 of 4 MS10 spares = MDF-A01 / MDF-A02<span class="check-note">Christian Diaz / JP Garcia to decide and communicate</span></span><span class="check-status status-blocked">Needed Today</span></li>
+      <li><span class="check-icon">⛔</span><span class="check-text">Send Matthew updated non-HA topology (WO link + topology diagram)<span class="check-note">JP Garcia updated WO on 3/23; needs to be shared with Matthew</span></span><span class="check-status status-blocked">Needed Today</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">JP Garcia: Update AP radio config with Hamina<span class="check-note">Flagged by Elvirlee 3/23 at 11 PM</span></span><span class="check-status status-pending">JP Garcia</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">Christian Diaz: Formally confirm no secondary SA will be shipped<span class="check-note">Still open per Elvirlee's 3/23 EOD update</span></span><span class="check-status status-pending">Christian</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">Assign Deployment Engineer — still unassigned as of 3/23</span><span class="check-status status-pending">Needs Assign</span></li>
+    </ul>
+
+    <div class="section-divider">Day 3 / TGL — Wednesday 3/25 (Matthew Returns)</div>
+    <ul class="checklist">
+      <li><span class="check-icon">⬜</span><span class="check-text">Install fiber SFP module (from EO-5434) into SA WAN port</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Rack and label 2× MS12 core switches (from EO-5439)</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Label and assign MDF-A01 / MDF-A02 from spare MS10 stock</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Patch MDF per updated topology (non-HA)</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Switch auto-config complete</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">ISP test patch-in — Lightpath fiber with SFP, WAN quality = 100%</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">All 16 APs online with 1 Gbps PoE in Dashboard</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">ACS complete and cross-referenced with Hamina power settings</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Dashboard speed and ping test (WAN + client)</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Guest WiFi speed test via fast.com or speedtest.net (screenshot confirming WiFi, not LTE)</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Client speed test via Meter Speed Test at speedtest.meter.network</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Dashboard Issues page — no unexpected errors</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">CompanyCam closeout photos + data drop photos (currently 1/15)</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Physical deployment quality validated, feedback submitted for Matthew</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Notify Christian Diaz (JO) to mark network live</span><span class="check-status status-pending">3/25</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Create Lightpath circuit record in Toolshed → Circuits</span><span class="check-status status-pending">Connect Team</span></li>
+    </ul>
+  </div>
+
+  <!-- SLACK TIMELINE -->
+  <div class="card-full">
+    <div class="card-title">Deployment Thread History (Key Events)</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot dot-red"></div>
+        <div class="tl-body">
+          <div class="tl-date">March 23, 2026 — 9:01 PM (Elvirlee EOD Update)</div>
+          <div class="tl-text"><strong>Day 1 complete. Matthew NOT returning 3/24.</strong> All 16 APs cabled, mounted, labeled ✅. SA + PDUs racked ✅. 3 blockers confirmed before Matthew returns 3/25:<br>1) SFP delivery confirmation, 2) Switch direction (MDF-A01/A02), 3) Updated topology. CompanyCam at 1/15. Cutover date of 3/15 already passed — job At Risk.</div>
+          <div class="tl-who">Elvirlee Villanueva · #deployments · Passed to Faye (Shift 1)</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dot-orange"></div>
+        <div class="tl-body">
+          <div class="tl-date">March 23, 2026 — 1:32 PM (Equipment Issues Surfaced)</div>
+          <div class="tl-text">Sthephanie (Faye) flagged: Missing SFP module (Lightpath fiber handoff, copper-only on-site), no MS11 (4 spare MS10s available), no secondary SA. Customer Christina Troy confirmed <strong>no backup ISP</strong>. Christian updated to non-HA. JP ordered EO-5434 (ISP kit) and EO-5439 (2× MS12 core switches).</div>
+          <div class="tl-who">Sthephanie Esguerra + Christian Diaz + JP Garcia · #deployments</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dot-blue"></div>
+        <div class="tl-body">
+          <div class="tl-date">March 20, 2026 — Bid Correction</div>
+          <div class="tl-text">ISP patch-in bid corrected from $1,375 → $137.50. Revised bid and COIs uploaded. Christian approved all other line items.</div>
+          <div class="tl-who">Rhea Shah + Christian Diaz · #deployments</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dot-blue"></div>
+        <div class="tl-body">
+          <div class="tl-date">March 12, 2026 — Install Scheduled</div>
+          <div class="tl-text">Trellis confirmed 3/23 start, 9–10 AM arrival window, 3-day install. Matt Valdes as lead tech. Christian requested WO and bid sheet finalization.</div>
+          <div class="tl-who">Rhea Shah · #deployments</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dot-green"></div>
+        <div class="tl-body">
+          <div class="tl-date">March 19, 2026 — EO-5343 Delivered</div>
+          <div class="tl-text">Main hardware (5 items) delivered to 99 High Street 14th Floor via UPS Next Day Air (1Z166V980129604839).</div>
+          <div class="tl-who">Airtable Equipment Orders</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dot-blue"></div>
+        <div class="tl-body">
+          <div class="tl-date">February 19, 2026 — Site Survey Scheduled</div>
+          <div class="tl-text">Christian requested site visit with "Errol" at 11 AM Monday. Rhea arranged Matt Valdes for survey. Snow in Boston flagged — check with customer POC.</div>
+          <div class="tl-who">Christian Diaz + Rhea Shah · #deployments</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dot-blue"></div>
+        <div class="tl-body">
+          <div class="tl-date">January 28, 2026 — Christian Diaz Assigned as JO</div>
+          <div class="tl-text">Job assigned. JP Garcia on wireless design. Deployment Engineer still unassigned. Kickoff email drafted for Tines customer onboarding.</div>
+          <div class="tl-who">Deployment Threads bot · #deployments</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="card-full">
+    <div class="card-title">Quick Links</div>
+    <div class="link-grid">
+      <a class="link-card" href="https://dashboard.meter.com/network/019be9b1-28d4-51c8-127e-41c7b8a9565c" target="_blank"><span>📊</span>Meter Dashboard</a>
+      <a class="link-card" href="https://docs.google.com/document/d/1q3yv-SDeq2GlU6YbWjikFzjIOO79iHy9jgpKYfaKTIk/edit?usp=sharing" target="_blank"><span>📋</span>Work Order</a>
+      <a class="link-card" href="https://us.hamina.com/share/e224704f-af31-430b-a16f-4fee006ece4f" target="_blank"><span>📐</span>Hamina Design</a>
+      <a class="link-card" href="https://app.companycam.com/projects/97692100" target="_blank"><span>📸</span>CompanyCam (7%)</a>
+      <a class="link-card" href="https://app.slack.com/client/TKLMU28JH/C06ADV7RR6F/thread/C06ADV7RR6F-1769153144.002429" target="_blank"><span>💬</span>Slack Thread</a>
+      <a class="link-card" href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/viwbnA4Rcd6Rfxfnx/recQMV1Rpt7WiPNWi" target="_blank"><span>🗂️</span>Airtable Record</a>
+      <a class="link-card" href="https://web.miniextensions.com/VE9b8H9NcmxexyDFrinX/recQMV1Rpt7WiPNWi" target="_blank"><span>📝</span>Update Job Status</a>
+      <a class="link-card" href="https://dashboard.meter.com/toolshed/connect/circuits" target="_blank"><span>🔌</span>Toolshed Circuits</a>
+      <a class="link-card" href="https://interval.com/dashboard/meter/actions/equipment_orders/details?id=5434" target="_blank"><span>🚚</span>EO-5434 (ISP Kit)</a>
+      <a class="link-card" href="https://interval.com/dashboard/meter/actions/equipment_orders/details?id=5439" target="_blank"><span>🚚</span>EO-5439 (MS12s)</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Site brief generated March 24, 2026 · Partner-Ops Intelligence · Sources: Airtable (Job T7WIPNWI), Slack #deployments (36-reply thread), Equipment Orders EO-5343/5434/5439<br>
+    <strong style="color:var(--red)">THREE BLOCKERS MUST BE RESOLVED TODAY — Matthew cannot return without SFP confirmation, switch direction, and updated topology.</strong>
+  </div>
+
+</div>
+</body>
+</html>
