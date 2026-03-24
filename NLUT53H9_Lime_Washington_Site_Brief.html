@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Brief · NLUT53H9 · Lime Washington · 3390 V St NE</title>
+<style>
+  :root {
+    --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
+    --yellow: #d97706; --yellow-bg: #fffbeb; --yellow-border: #fde68a;
+    --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+    --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+    --gray: #6b7280; --gray-bg: #f9fafb; --gray-border: #e5e7eb;
+    --teal: #0d9488; --teal-bg: #f0fdfa; --teal-border: #99f6e4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; font-size: 14px; }
+
+  .topbar { background: #0f172a; color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .meter-logo { font-weight: 800; font-size: 15px; letter-spacing: 0.5px; color: #60a5fa; }
+  .topbar-title { font-size: 13px; color: #cbd5e1; }
+  .topbar-right { font-size: 11px; color: #64748b; }
+
+  .alert-banner { background: #0d9488; color: white; padding: 10px 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  .hero { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px 24px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
+  .hero-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .hero-subtitle { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge-gray { background: var(--gray-bg); color: var(--gray); border: 1px solid var(--gray-border); }
+  .badge-teal { background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-border); }
+
+  .hero-stats { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .readiness-score { font-size: 36px; font-weight: 800; color: var(--green); line-height: 1; }
+  .readiness-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .alerts { margin-bottom: 16px; }
+  .alert-card { border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; border-left: 4px solid; display: flex; gap: 12px; align-items: flex-start; }
+  .alert-card.success { background: var(--green-bg); border-color: var(--green); }
+  .alert-card.warning { background: var(--yellow-bg); border-color: var(--yellow); }
+  .alert-card.info { background: var(--blue-bg); border-color: var(--blue); }
+  .alert-card.teal { background: var(--teal-bg); border-color: var(--teal); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert-content .alert-title { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+  .alert-content .alert-body { font-size: 12px; color: #475569; line-height: 1.5; }
+  .alert-card.success .alert-title { color: var(--green); }
+  .alert-card.warning .alert-title { color: var(--yellow); }
+  .alert-card.info .alert-title { color: var(--blue); }
+  .alert-card.teal .alert-title { color: var(--teal); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 16px; }
+  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
+  .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; gap: 8px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: #64748b; flex-shrink: 0; font-weight: 500; }
+  .info-value { color: #0f172a; text-align: right; font-weight: 600; word-break: break-word; }
+  .info-value a { color: var(--blue); text-decoration: none; }
+  .info-value a:hover { text-decoration: underline; }
+
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .check-text { flex: 1; }
+  .check-note { font-size: 11px; color: #64748b; display: block; margin-top: 2px; }
+  .check-status { font-size: 11px; padding: 2px 7px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+  .status-done { background: var(--green-bg); color: var(--green); }
+  .status-pending { background: var(--yellow-bg); color: var(--yellow); }
+  .status-blocked { background: var(--red-bg); color: var(--red); }
+  .status-na { background: var(--gray-bg); color: var(--gray); }
+
+  .timeline { padding: 0; }
+  .timeline-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dot-green { background: var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-blue { background: var(--blue); }
+  .dot-teal { background: var(--teal); }
+  .timeline-content { flex: 1; }
+  .timeline-date { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 2px; }
+  .timeline-text { font-size: 13px; color: #1e293b; line-height: 1.4; }
+  .timeline-author { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+  .link-card { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #1e293b; font-size: 13px; font-weight: 600; transition: all 0.15s; background: white; }
+  .link-card:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+
+  .card-full { margin-bottom: 16px; }
+
+  /* Action box */
+  .action-box { background: #fefce8; border: 2px solid #fde047; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; }
+  .action-box-title { font-size: 14px; font-weight: 800; color: #713f12; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .action-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 13px; color: #1e293b; border-bottom: 1px solid #fef08a; }
+  .action-item:last-child { border-bottom: none; }
+  .action-num { font-weight: 800; color: #92400e; min-width: 20px; }
+  .action-who { font-size: 11px; background: #fef9c3; color: #92400e; padding: 1px 6px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
+
+  .status-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
+  .status-pill { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; }
+  .status-pill .pill-icon { font-size: 20px; }
+  .status-pill .pill-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 3px; }
+  .status-pill .pill-value { font-size: 12px; font-weight: 700; margin-top: 2px; }
+  .pill-green .pill-value { color: var(--green); }
+  .pill-yellow .pill-value { color: var(--yellow); }
+  .pill-red .pill-value { color: var(--red); }
+  .pill-blue .pill-value { color: var(--blue); }
+  .pill-gray .pill-value { color: var(--gray); }
+
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 20px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="meter-logo">⚡ Meter</span>
+    <span class="topbar-title">Partner-Ops · Site Intelligence Brief</span>
+  </div>
+  <div class="topbar-right">Generated March 24, 2026 · Job NLUT53H9</div>
+</div>
+
+<div class="alert-banner">
+  <span>✅</span>
+  INSTALL COMPLETE · PENDING ADMINISTRATIVE CLOSEOUT — Kris must mark Network Live in Airtable / SFDC / Dashboard
+</div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-title">Lime — Washington DC</div>
+      <div class="hero-subtitle">3390 V Street Northeast · Washington, DC · Site: NOAM-USA-WASH-0276</div>
+      <div class="hero-meta">
+        <span class="badge badge-teal">📦 Standard Install</span>
+        <span class="badge badge-green">✅ Install Complete</span>
+        <span class="badge badge-green">ISP: Patched In ✓</span>
+        <span class="badge badge-yellow">Validation Gate: Not Started</span>
+        <span class="badge badge-gray">TGL: Mar 23 (met early)</span>
+        <span class="badge badge-gray">JO: Kris Capanpan</span>
+        <span class="badge badge-gray">Tech: David Grantham (Concert Technologies)</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div style="text-align:center;">
+        <div class="readiness-score">85%</div>
+        <div class="readiness-label">Complete</div>
+      </div>
+      <span class="badge badge-yellow">CLOSEOUT PENDING</span>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="status-pill pill-green">
+      <div class="pill-icon">📦</div>
+      <div class="pill-label">Equipment</div>
+      <div class="pill-value">Delivered</div>
+    </div>
+    <div class="status-pill pill-green">
+      <div class="pill-icon">🔧</div>
+      <div class="pill-label">Installation</div>
+      <div class="pill-value">Complete</div>
+    </div>
+    <div class="status-pill pill-green">
+      <div class="pill-icon">🔌</div>
+      <div class="pill-label">ISP Patch-In</div>
+      <div class="pill-value">Complete</div>
+    </div>
+    <div class="status-pill pill-yellow">
+      <div class="pill-icon">🔍</div>
+      <div class="pill-label">Validation Gate</div>
+      <div class="pill-value">Not Started</div>
+    </div>
+    <div class="status-pill pill-yellow">
+      <div class="pill-icon">🌐</div>
+      <div class="pill-label">Network Live</div>
+      <div class="pill-value">Pending in AT</div>
+    </div>
+  </div>
+
+  <!-- ACTION BOX -->
+  <div class="action-box">
+    <div class="action-box-title">⚡ Immediate Actions Required</div>
+    <div class="action-item">
+      <span class="action-num">1</span>
+      <span>Close the Validation Gate in Airtable — mark as complete to formally confirm the install passed all gates</span>
+      <span class="action-who">Kris Capanpan</span>
+    </div>
+    <div class="action-item">
+      <span class="action-num">2</span>
+      <span>Update Job Status → "Network Live" in Airtable (currently "Job Started")</span>
+      <span class="action-who">Kris Capanpan</span>
+    </div>
+    <div class="action-item">
+      <span class="action-num">3</span>
+      <span>Mark Network Live in Meter Dashboard &amp; SFDC (Salesforce) to complete the customer journey</span>
+      <span class="action-who">Kris Capanpan</span>
+    </div>
+    <div class="action-item">
+      <span class="action-num">4</span>
+      <span>Confirm ISP circuit details are logged — no circuit records found in Meter Circuits table (customer-provided ISP likely)</span>
+      <span class="action-who">Kris + Connect Team</span>
+    </div>
+    <div class="action-item">
+      <span class="action-num">5</span>
+      <span>Verify CompanyCam closeout photos and completion checklist are fully uploaded by Sthephanie / David Grantham</span>
+      <span class="action-who">Kris Capanpan</span>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="alerts">
+    <div class="alert-card success">
+      <span class="alert-icon">🎉</span>
+      <div class="alert-content">
+        <div class="alert-title">Install Completed Ahead of Schedule</div>
+        <div class="alert-body">Validation release was completed on March 19 — four days before the March 23 TGL. Sthephanie confirmed closeout uploaded and network marked live in the deployment thread. This is ahead of schedule.</div>
+      </div>
+    </div>
+    <div class="alert-card success">
+      <span class="alert-icon">✅</span>
+      <div class="alert-content">
+        <div class="alert-title">ISP Test Patch-In: Complete</div>
+        <div class="alert-body">WAN patch-in is confirmed complete per Airtable. ISP is live and passing. No circuit records found in the Meter Circuits table, suggesting this is likely a customer-provided ISP managed outside Meter Connect. Confirm with Kris / Connect team if any ISP logging is needed.</div>
+      </div>
+    </div>
+    <div class="alert-card warning">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <div class="alert-title">Validation Gate: Not Started in Airtable</div>
+        <div class="alert-body">Despite the install being complete and validation having been done on 3/19, the formal Validation Gate field in Airtable is still set to "Not started." This needs to be closed out by Kris Capanpan to ensure the job is properly tracked as complete.</div>
+      </div>
+    </div>
+    <div class="alert-card warning">
+      <span class="alert-icon">📋</span>
+      <div class="alert-content">
+        <div class="alert-title">Job Status Still Shows "Job Started"</div>
+        <div class="alert-body">The Airtable job status has not been updated to "Network Live." This affects pipeline tracking, billing triggers, and customer journey completion. Kris needs to update this in Airtable, Dashboard, and Salesforce.</div>
+      </div>
+    </div>
+    <div class="alert-card info">
+      <span class="alert-icon">🔌</span>
+      <div class="alert-content">
+        <div class="alert-title">No ISP Circuit Records in Meter Circuits Table</div>
+        <div class="alert-body">Searched Meter Circuits by network UUID (019b9f6e-3c3e-2399-5e4c-54750a09504e). No records found. Since ISP patch-in is marked Complete, this is likely a customer-provided circuit (Lime's own ISP). Verify with Connect team if a circuit record should be created for monitoring.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOB DETAILS + TEAM -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Job Details</div>
+      <div class="info-row"><span class="info-label">Job ID</span><span class="info-value">NLUT53H9</span></div>
+      <div class="info-row"><span class="info-label">Job Type</span><span class="info-value">Standard Install (SI)</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-value" style="color:var(--yellow)">Job Started → needs "Network Live"</span></div>
+      <div class="info-row"><span class="info-label">TGL</span><span class="info-value" style="color:var(--green)">March 23, 2026 (met on 3/19 ✓)</span></div>
+      <div class="info-row"><span class="info-label">Validation Release</span><span class="info-value" style="color:var(--green)">March 19, 2026 ✓</span></div>
+      <div class="info-row"><span class="info-label">Site Code</span><span class="info-value">NOAM-USA-WASH-0276</span></div>
+      <div class="info-row"><span class="info-label">Site Scope</span><span class="info-value">Office · 20k–30k sq ft</span></div>
+      <div class="info-row"><span class="info-label">Network ID</span><span class="info-value" style="font-size:11px">019b9f6e-3c3e-2399-5e4c-54750a09504e</span></div>
+      <div class="info-row"><span class="info-label">Network Design</span><span class="info-value">092328</span></div>
+      <div class="info-row"><span class="info-label">Equipment Order</span><span class="info-value">EO-5139 · Delivered March 11 ✓</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Team Contacts</div>
+      <div class="info-row"><span class="info-label">Job Owner</span><span class="info-value">Kris Capanpan<br><a href="mailto:kris.capanpan@meter.com">kris.capanpan@meter.com</a></span></div>
+      <div class="info-row"><span class="info-label">Technician</span><span class="info-value">David Grantham · Concert Technologies<br><a href="tel:5713613563">(571) 361-3563</a></span></div>
+      <div class="info-row"><span class="info-label">Install Firm</span><span class="info-value">Concert Technologies · Dulles, VA</span></div>
+      <div class="info-row"><span class="info-label">Partner Ops</span><span class="info-value">JP Garcia<br><a href="mailto:jp.garcia@meter.com">jp.garcia@meter.com</a></span></div>
+      <div class="info-row"><span class="info-label">Opp. Owner</span><span class="info-value">Adrien Moritz</span></div>
+      <div class="info-row"><span class="info-label">Closeout Contact</span><span class="info-value">Sthephanie (posted closeout 3/20)</span></div>
+    </div>
+  </div>
+
+  <!-- ISP + PORT MAP -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Circuit / ISP Status</div>
+      <div class="info-row">
+        <span class="info-label">WAN Patch-In</span>
+        <span class="info-value" style="color:var(--green)">✅ Complete</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ISP Provider</span>
+        <span class="info-value" style="color:var(--gray)">Not in Meter Circuits table</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Circuit Records</span>
+        <span class="info-value" style="color:var(--yellow)">⚠️ None found (customer ISP likely)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ISP Issues Logged</span>
+        <span class="info-value" style="color:var(--green)">No</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Network Populated</span>
+        <span class="info-value" style="color:var(--green)">✅ Yes (Dashboard configured)</span>
+      </div>
+      <div style="margin-top:12px; padding:10px; background:var(--teal-bg); border-radius:6px; font-size:12px; color:var(--teal); font-weight:600;">
+        No action needed on ISP — patch-in confirmed working. Verify if a circuit record should be created in <a href="https://dashboard.meter.com/toolshed/connect/circuits" style="color:var(--teal)">Toolshed → Circuits</a>.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Port Map &amp; Topology</div>
+      <ul class="checklist">
+        <li>
+          <span class="check-icon">📄</span>
+          <span class="check-text">Work Order — WAN config, VLAN layout, switch topology
+            <span class="check-note">Google Doc linked to job</span>
+          </span>
+          <span class="check-status status-done"><a href="https://docs.google.com/document/d/1P_IBiYgBYtuu7DOxeoXuXIUzimQkrSegfAdNBPHSFyA/edit?usp=sharing" target="_blank" style="color:var(--green);text-decoration:none;">Open ↗</a></span>
+        </li>
+        <li>
+          <span class="check-icon">📐</span>
+          <span class="check-text">Network Design 092328
+            <span class="check-note">Linked from Airtable Network Designs (record recagTemTfvxNn3P4)</span>
+          </span>
+          <span class="check-status status-done">On File</span>
+        </li>
+        <li>
+          <span class="check-icon">🖼️</span>
+          <span class="check-text">Site floor plan — "Lime - Washington (1).png"
+            <span class="check-note">Attached to Airtable job record</span>
+          </span>
+          <span class="check-status status-done">In Airtable</span>
+        </li>
+        <li>
+          <span class="check-icon">📋</span>
+          <span class="check-text">Equipment Order EO-5139 — inventory app
+            <span class="check-note">Delivered March 11 · UPS Ground 1Z166V980334460481</span>
+          </span>
+          <span class="check-status status-done"><a href="https://interval.com/dashboard/meter/actions/equipment_orders/details?id=5139" target="_blank" style="color:var(--green);text-decoration:none;">Open ↗</a></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CLOSEOUT CHECKLIST -->
+  <div class="card card-full">
+    <div class="card-title">Full Deployment Checklist — Final Status</div>
+    <ul class="checklist">
+      <li><span class="check-icon">✅</span><span class="check-text">Equipment delivered (EO-5139, March 11, 2026)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Technician on-site — David Grantham, Concert Technologies</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Cable rough-in and AP mounting completed</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Network populated in Meter Dashboard</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">ISP test patch-in — WAN live and passing</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">All switches online and auto-configured</span><span class="check-status status-done">Assumed ✓</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Ops Network Closeout completed in Airtable</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Closeout photos and completion checklist uploaded (Sthephanie, 3/20)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Validation release signed off (Chris Thom, 3/19)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">Validation Gate closed in Airtable</span><span class="check-status status-pending">Kris — Action Needed</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">Job Status updated to "Network Live" in Airtable</span><span class="check-status status-pending">Kris — Action Needed</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">Network Live confirmed in Meter Dashboard</span><span class="check-status status-pending">Kris — Action Needed</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">Salesforce (SFDC) opportunity updated to live</span><span class="check-status status-pending">Kris — Action Needed</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">ISP circuit record created in Meter Circuits table (if applicable)</span><span class="check-status status-pending">Verify w/ Connect</span></li>
+    </ul>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="card card-full">
+    <div class="card-title">Deployment Thread History</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot dot-yellow"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 24, 2026 — TODAY</div>
+          <div class="timeline-text">Administrative closeout still pending. Kris Capanpan needs to formally close the Validation Gate and mark network live across Airtable, Dashboard, and SFDC.</div>
+          <div class="timeline-author">Site Brief generated — Partner-Ops</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-green"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 20, 2026</div>
+          <div class="timeline-text">Sthephanie posted closeout confirmation: "uploading closeout and marking network live." Chris Thom confirmed validation release was completed on 3/19. Briefing note: confirm Kris updates network live status in Airtable/SFDC/Dashboard.</div>
+          <div class="timeline-author">Sthephanie / Chris Thom · #deployments daily briefing</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-green"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 19, 2026</div>
+          <div class="timeline-text">Validation release completed by Chris Thom — 4 days ahead of the March 23 TGL. ISP patch-in confirmed passing. All APs online.</div>
+          <div class="timeline-author">Chris Thom · Partner-Ops</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 11, 2026</div>
+          <div class="timeline-text">EO-5139 delivered via UPS Ground to Concert Technologies office in Dulles, VA (tracking: 1Z166V980334460481). David Grantham confirmed receipt.</div>
+          <div class="timeline-author">Airtable Equipment Orders</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 4, 2026</div>
+          <div class="timeline-text">Equipment order EO-5139 placed for Lime Washington. Shipped to Concert Technologies (JP Garcia as coordinator). Network design 092328 linked.</div>
+          <div class="timeline-author">Airtable Equipment Orders / JP Garcia</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">January 8, 2026</div>
+          <div class="timeline-text">Job NLUT53H9 created. Kris Capanpan assigned as Job Owner. TGL set for March 23, 2026. Installation window: March 16–24.</div>
+          <div class="timeline-author">Airtable Job Tracking</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="card card-full">
+    <div class="card-title">Quick Links</div>
+    <div class="link-grid">
+      <a class="link-card" href="https://dashboard.meter.com/network/019b9f6e-3c3e-2399-5e4c-54750a09504e" target="_blank"><span>📊</span>Meter Dashboard</a>
+      <a class="link-card" href="https://docs.google.com/document/d/1P_IBiYgBYtuu7DOxeoXuXIUzimQkrSegfAdNBPHSFyA/edit?usp=sharing" target="_blank"><span>📋</span>Work Order</a>
+      <a class="link-card" href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/viwbnA4Rcd6Rfxfnx/recVGfRMjNluT53h9" target="_blank"><span>🗂️</span>Airtable Record</a>
+      <a class="link-card" href="https://web.miniextensions.com/VE9b8H9NcmxexyDFrinX/recVGfRMjNluT53h9" target="_blank"><span>📝</span>Update Job Status</a>
+      <a class="link-card" href="https://interval.com/dashboard/meter/actions/equipment_orders/details?id=5139" target="_blank"><span>📦</span>EO-5139 Inventory</a>
+      <a class="link-card" href="https://dashboard.meter.com/toolshed/connect/circuits" target="_blank"><span>🔌</span>Toolshed Circuits</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Site brief generated March 24, 2026 · Partner-Ops Intelligence · Sources: Airtable (Job NLUT53H9), Slack #deployments, Meter Circuits DB, Equipment Orders EO-5139<br>
+    <strong style="color:var(--teal)">Install complete — only administrative closeout tasks remain. Kris Capanpan to action.</strong>
+  </div>
+
+</div>
+</body>
+</html>
