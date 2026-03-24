@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Brief · BYTECUYX · McKinley Aria · Orlando</title>
+<style>
+  :root {
+    --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
+    --yellow: #d97706; --yellow-bg: #fffbeb; --yellow-border: #fde68a;
+    --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+    --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+    --gray: #6b7280; --gray-bg: #f9fafb; --gray-border: #e5e7eb;
+    --meter-blue: #1d4ed8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; font-size: 14px; }
+
+  /* TOP BAR */
+  .topbar { background: #0f172a; color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .meter-logo { font-weight: 800; font-size: 15px; letter-spacing: 0.5px; color: #60a5fa; }
+  .topbar-title { font-size: 13px; color: #cbd5e1; }
+  .topbar-right { font-size: 11px; color: #64748b; }
+
+  /* ALERT BANNER */
+  .alert-banner { background: #dc2626; color: white; padding: 10px 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+  .alert-banner .icon { font-size: 16px; }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  /* HERO CARD */
+  .hero { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px 24px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
+  .hero-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .hero-subtitle { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge-gray { background: var(--gray-bg); color: var(--gray); border: 1px solid var(--gray-border); }
+
+  .hero-stats { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .readiness-ring { text-align: center; }
+  .readiness-score { font-size: 36px; font-weight: 800; color: var(--red); line-height: 1; }
+  .readiness-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ALERT CARDS */
+  .alerts { margin-bottom: 16px; }
+  .alert-card { border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; border-left: 4px solid; display: flex; gap: 12px; align-items: flex-start; }
+  .alert-card.critical { background: var(--red-bg); border-color: var(--red); }
+  .alert-card.warning { background: var(--yellow-bg); border-color: var(--yellow); }
+  .alert-card.info { background: var(--blue-bg); border-color: var(--blue); }
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert-content .alert-title { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+  .alert-content .alert-body { font-size: 12px; color: #475569; line-height: 1.5; }
+  .alert-card.critical .alert-title { color: var(--red); }
+  .alert-card.warning .alert-title { color: var(--yellow); }
+  .alert-card.info .alert-title { color: var(--blue); }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* INFO CARDS */
+  .card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; padding: 16px; }
+  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
+  .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; gap: 8px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: #64748b; flex-shrink: 0; font-weight: 500; }
+  .info-value { color: #0f172a; text-align: right; font-weight: 600; word-break: break-word; }
+  .info-value a { color: var(--blue); text-decoration: none; }
+  .info-value a:hover { text-decoration: underline; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .check-text { flex: 1; }
+  .check-status { font-size: 11px; padding: 2px 7px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+  .status-done { background: var(--green-bg); color: var(--green); }
+  .status-pending { background: var(--yellow-bg); color: var(--yellow); }
+  .status-blocked { background: var(--red-bg); color: var(--red); }
+  .status-na { background: var(--gray-bg); color: var(--gray); }
+
+  /* EQUIPMENT TABLE */
+  .eq-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .eq-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; padding: 0 0 8px; border-bottom: 1px solid #e2e8f0; }
+  .eq-table td { padding: 7px 0; border-bottom: 1px solid #f1f5f9; color: #1e293b; font-weight: 500; }
+  .eq-table tr:last-child td { border-bottom: none; }
+  .eq-table td:last-child { text-align: right; }
+
+  /* SLACK TIMELINE */
+  .timeline { padding: 0; }
+  .timeline-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dot-red { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-green { background: var(--green); }
+  .dot-blue { background: var(--blue); }
+  .timeline-content { flex: 1; }
+  .timeline-date { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 2px; }
+  .timeline-text { font-size: 13px; color: #1e293b; line-height: 1.4; }
+  .timeline-author { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+  /* LINKS */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+  .link-card { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #1e293b; font-size: 13px; font-weight: 600; transition: all 0.15s; background: white; }
+  .link-card:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+  .link-card .link-icon { font-size: 16px; }
+
+  /* SECTION HEADER */
+  .section-header { font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .section-header .count { font-size: 11px; background: #f1f5f9; color: #64748b; padding: 2px 7px; border-radius: 10px; }
+
+  /* FOOTER */
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 20px; margin-top: 8px; }
+
+  /* WIDE CARD */
+  .card-full { margin-bottom: 16px; }
+
+  .note-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #92400e; line-height: 1.5; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="meter-logo">⚡ Meter</span>
+    <span class="topbar-title">Partner-Ops · Site Intelligence Brief</span>
+  </div>
+  <div class="topbar-right">Generated March 24, 2026 · Job BYTECUYX</div>
+</div>
+
+<div class="alert-banner">
+  <span class="icon">🚨</span>
+  CUTOVER IN PROGRESS — 3/24 AM · ISP CIRCUIT UNVERIFIED · IMMEDIATE ACTION REQUIRED
+</div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-title">McKinley Companies — Aria</div>
+      <div class="hero-subtitle">3211 South Semoran Boulevard · Orlando, FL 32822</div>
+      <div class="hero-meta">
+        <span class="badge badge-red">🔄 Swap</span>
+        <span class="badge badge-red">⚠️ AT RISK</span>
+        <span class="badge badge-yellow">ISP: Unknown / Incomplete</span>
+        <span class="badge badge-blue">Cutover: 3/24 AM — TODAY</span>
+        <span class="badge badge-gray">TGL: Mar 23 (overdue)</span>
+        <span class="badge badge-gray">JO: Mitchell Meade</span>
+        <span class="badge badge-gray">Tech: Joseph Petit (Matrix NDI)</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="readiness-ring">
+        <div class="readiness-score">38%</div>
+        <div class="readiness-label">Ready</div>
+      </div>
+      <span class="badge badge-red">NOT READY FOR CUTOVER</span>
+    </div>
+  </div>
+
+  <!-- CRITICAL ALERTS -->
+  <div class="alerts">
+    <div class="alert-card critical">
+      <span class="alert-icon">🚫</span>
+      <div class="alert-content">
+        <div class="alert-title">BLOCKER: No ISP Circuit Records Found</div>
+        <div class="alert-body">No circuit records exist in the Meter Circuits table for this network (019cabd9-6442-23ad-f41a-14fa3ad764cd). ISP status shows "Unknown/Incomplete" in Airtable. No circuit was found in the #isp-fulfillment channel for 3211 Semoran. The ISP patch-in has NOT been completed. A cutover cannot proceed without a live, patched ISP circuit. <strong>Contact Mitchell Meade and the Connect/ISP team immediately.</strong></div>
+      </div>
+    </div>
+    <div class="alert-card critical">
+      <span class="alert-icon">📡</span>
+      <div class="alert-content">
+        <div class="alert-title">BLOCKER: ISP Test Patch-In Not Completed</div>
+        <div class="alert-body">The ISP Test Patch-In validation gate is marked <strong>Incomplete</strong> in Airtable. FW WAN0 has not been verified with a live ISP signal. The circuit must be physically patched in and tested before cutover can begin.</div>
+      </div>
+    </div>
+    <div class="alert-card warning">
+      <span class="alert-icon">📐</span>
+      <div class="alert-content">
+        <div class="alert-title">⚠️ AP Installation Status Unconfirmed</div>
+        <div class="alert-body">As of March 18 (last site update), the EOD AP hang count was unconfirmed. Joseph Petit completed cable rough-in but it was unclear how many of 7x MW08 APs were physically mounted before close of day. AP relocation requests were noted; floor plan callouts need to be verified and documented before cutover.</div>
+      </div>
+    </div>
+    <div class="alert-card warning">
+      <span class="alert-icon">📋</span>
+      <div class="alert-content">
+        <div class="alert-title">⚠️ Ops Network Closeout Not Started</div>
+        <div class="alert-body">The Ops Network Closeout task is marked Incomplete. The Validation Gate is Not Started. These must be completed post-cutover.</div>
+      </div>
+    </div>
+    <div class="alert-card info">
+      <span class="alert-icon">📦</span>
+      <div class="alert-content">
+        <div class="alert-title">Equipment Delivered — Confirmed On-Site</div>
+        <div class="alert-body">EO-5148 delivered via UPS 2nd Day Air on March 9. Tech confirmed inventory on 3/18: 2× MP01, 2× MS10, 1× MC06, 7× MW08 — all labeled.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTES BOX -->
+  <div class="note-box">
+    <strong>📝 Install Notes (from Airtable):</strong> "3/18 - cabling &nbsp;|&nbsp; 3/24 morning - cutover" — Cutover was originally planned for 3/23 PM then updated to today 3/24 AM. Alex La Fazia (DE) and JP Garcia (Wireless Design) were assigned 3/23 at 7:13 PM.
+  </div>
+
+  <!-- KEY INFO GRID -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Job Details</div>
+      <div class="info-row"><span class="info-label">Job ID</span><span class="info-value">BYTECUYX</span></div>
+      <div class="info-row"><span class="info-label">Job Type</span><span class="info-value">Swap</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-value">Assigned / Job Scheduled</span></div>
+      <div class="info-row"><span class="info-label">TGL</span><span class="info-value" style="color:var(--red)">March 23, 2026 (overdue)</span></div>
+      <div class="info-row"><span class="info-label">Cutover</span><span class="info-value" style="color:var(--red)">March 24 AM — TODAY</span></div>
+      <div class="info-row"><span class="info-label">Site Scope</span><span class="info-value">Office · 10k–20k sq ft</span></div>
+      <div class="info-row"><span class="info-label">Network ID</span><span class="info-value" style="font-size:11px">019cabd9-6442-23ad-f41a-14fa3ad764cd</span></div>
+      <div class="info-row"><span class="info-label">Risk Level</span><span class="info-value" style="color:var(--red)">AT RISK</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Team Contacts</div>
+      <div class="info-row"><span class="info-label">Job Owner</span><span class="info-value">Mitchell Meade (mitch@meter.com)</span></div>
+      <div class="info-row"><span class="info-label">Technician</span><span class="info-value">Joseph Petit · Matrix NDI<br><a href="tel:9548013992">(954) 801-3992</a></span></div>
+      <div class="info-row"><span class="info-label">Deploy Engineer</span><span class="info-value">Alex La Fazia</span></div>
+      <div class="info-row"><span class="info-label">Wireless Design</span><span class="info-value">JP Garcia</span></div>
+      <div class="info-row"><span class="info-label">Install Coord.</span><span class="info-value">Jam Lesaca</span></div>
+      <div class="info-row"><span class="info-label">Opp. Owner</span><span class="info-value">James Wilson</span></div>
+      <div class="info-row"><span class="info-label">Customer Contact</span><span class="info-value">Robyn Koncelik<br>robyn.koncelik@mckinley.com</span></div>
+    </div>
+  </div>
+
+  <!-- CIRCUIT STATUS + EQUIPMENT -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Circuit / ISP Status</div>
+      <div class="info-row">
+        <span class="info-label">WAN0 (Primary)</span>
+        <span class="info-value" style="color:var(--red)">⛔ NOT PATCHED IN</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">WAN1 (Backup)</span>
+        <span class="info-value" style="color:var(--gray)">— Unknown</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ISP Provider</span>
+        <span class="info-value" style="color:var(--red)">Unknown — not in Meter Circuits table</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Circuit Records</span>
+        <span class="info-value" style="color:var(--red)">⛔ None found</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ISP Test Patch-In</span>
+        <span class="info-value" style="color:var(--red)">Incomplete</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Circuit Type</span>
+        <span class="info-value" style="color:var(--gray)">Customer-provided? (verify)</span>
+      </div>
+      <div style="margin-top:12px; padding:10px; background:var(--red-bg); border-radius:6px; font-size:12px; color:var(--red); font-weight:600;">
+        🚨 ACTION REQUIRED: Contact Mitchell Meade + ISP team to confirm circuit status before cutover. Check <a href="https://dashboard.meter.com/toolshed/connect/circuits" style="color:var(--red)">Toolshed → Circuits → Fulfillments</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Equipment Manifest (EO-5148 · Delivered 3/9)</div>
+      <table class="eq-table">
+        <tr><th>Device</th><th>Model</th><th>Qty</th><th>Status</th></tr>
+        <tr><td>Firewall (MP01)</td><td>MP01</td><td>2×</td><td><span class="badge badge-green">On-Site ✓</span></td></tr>
+        <tr><td>Switch (MS10)</td><td>MS10</td><td>2×</td><td><span class="badge badge-green">On-Site ✓</span></td></tr>
+        <tr><td>Core Switch (MC06)</td><td>MC06</td><td>1×</td><td><span class="badge badge-green">On-Site ✓</span></td></tr>
+        <tr><td>APs (MW08)</td><td>MW08</td><td>7×</td><td><span class="badge badge-yellow">Mount Unconfirmed</span></td></tr>
+      </table>
+      <div style="margin-top:12px; font-size:12px; color:#64748b;">
+        Inventory confirmed by Joseph Petit on 3/18. All items labeled. AP hang count unconfirmed at EOD.
+      </div>
+    </div>
+  </div>
+
+  <!-- PORT MAP + TOPOLOGY -->
+  <div class="card card-full">
+    <div class="card-title">Port Map &amp; Topology Documents</div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <div class="section-header">Available Resources</div>
+        <ul class="checklist">
+          <li>
+            <span class="check-icon">📄</span>
+            <span class="check-text">Work Order (Google Doc) — WAN config, switch assignments, VLAN layout</span>
+            <span class="check-status status-done"><a href="https://docs.google.com/document/d/1ANroJFlssO8UTZKOqVAUGbZK0EwSjNWOq2dZVeIHH6Y/edit?usp=sharing" target="_blank" style="color:var(--green); text-decoration:none;">Open ↗</a></span>
+          </li>
+          <li>
+            <span class="check-icon">📐</span>
+            <span class="check-text">Hamina Wireless Design — AP placement, signal coverage, relocation notes</span>
+            <span class="check-status status-done"><a href="https://us.hamina.com/share/8f1c3df5-eaaa-40aa-aea0-647b17a5ae0e" target="_blank" style="color:var(--green); text-decoration:none;">Open ↗</a></span>
+          </li>
+          <li>
+            <span class="check-icon">📸</span>
+            <span class="check-text">CompanyCam — Site survey, cabling, rack photos</span>
+            <span class="check-status status-done"><a href="https://app.companycam.com/projects/97914238" target="_blank" style="color:var(--green); text-decoration:none;">Open ↗</a></span>
+          </li>
+          <li>
+            <span class="check-icon">📎</span>
+            <span class="check-text">Site Survey PDF — "Semoran.pdf" (attached to job record)</span>
+            <span class="check-status status-done">In Airtable</span>
+          </li>
+          <li>
+            <span class="check-icon">📋</span>
+            <span class="check-text">Rack Elevation / Patch Panel Layout — Check Work Order doc for topology diagram</span>
+            <span class="check-status status-pending">Verify in WO</span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-header">Gaps / Missing</div>
+        <ul class="checklist">
+          <li>
+            <span class="check-icon">❌</span>
+            <span class="check-text">Network Design topology link (N027493) — record not resolving in Airtable</span>
+            <span class="check-status status-blocked">Missing</span>
+          </li>
+          <li>
+            <span class="check-icon">❌</span>
+            <span class="check-text">ISP circuit information — No ISP provider, no circuit ID, no static IP details</span>
+            <span class="check-status status-blocked">Missing</span>
+          </li>
+          <li>
+            <span class="check-icon">⚠️</span>
+            <span class="check-text">AP relocation floor plan callouts — Joseph said he'd document, unconfirmed</span>
+            <span class="check-status status-pending">Unconfirmed</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- READINESS CHECKLIST -->
+  <div class="card card-full">
+    <div class="card-title">Pre-Cutover Readiness Checklist</div>
+    <ul class="checklist">
+      <li><span class="check-icon">✅</span><span class="check-text">Equipment delivered and confirmed on-site (EO-5148, 3/9)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Cable rough-in completed (3/18)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Work Order available and accessible</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Hamina wireless design available</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">✅</span><span class="check-text">Deployment Engineer (Alex La Fazia) assigned (3/23)</span><span class="check-status status-done">Complete</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">All 7× APs physically mounted and connected</span><span class="check-status status-pending">Verify w/ Joseph</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">AP relocation floor plan callouts documented</span><span class="check-status status-pending">Confirm Joseph logged</span></li>
+      <li><span class="check-icon">⚠️</span><span class="check-text">CompanyCam cabling + AP photos up to date</span><span class="check-status status-pending">Check CompanyCam</span></li>
+      <li><span class="check-icon">❌</span><span class="check-text">ISP circuit identified and confirmed with ISP team</span><span class="check-status status-blocked">BLOCKER</span></li>
+      <li><span class="check-icon">❌</span><span class="check-text">FW WAN0 IP address configured from ISP handoff</span><span class="check-status status-blocked">Needs ISP info</span></li>
+      <li><span class="check-icon">❌</span><span class="check-text">ISP test patch-in completed and ISP quality = 100%</span><span class="check-status status-blocked">BLOCKER</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Switch patching matches topology / Work Order</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">All IDFs and switches online (IDF cutovers)</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Switch auto-config complete</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Dashboard shows all APs online with 1 Gbps PoE</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Dashboard Issues page — no unexpected errors</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Speed test run from Dashboard (WAN + client)</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">No legacy equipment remains installed</span><span class="check-status status-pending">Day-of task</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">JO (Mitchell Meade) notified to mark network live</span><span class="check-status status-pending">Post-cutover</span></li>
+      <li><span class="check-icon">⬜</span><span class="check-text">Ops Network Closeout completed in Airtable</span><span class="check-status status-pending">Post-cutover</span></li>
+    </ul>
+  </div>
+
+  <!-- SLACK TIMELINE -->
+  <div class="card card-full">
+    <div class="card-title">Deployment Thread History</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 23, 2026 7:13 PM</div>
+          <div class="timeline-text">Alex La Fazia assigned as Deployment Engineer. JP Garcia confirmed on Wireless Design. Cutover updated to 3/24 AM.</div>
+          <div class="timeline-author">Deployment Threads bot · #deployments</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-yellow"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 18, 2026 — Cabling Day (Last On-Site)</div>
+          <div class="timeline-text">Tech Joseph Petit arrived 8:15 AM. Inventory confirmed: 2× MP01, 2× MS10, 1× MC06, 7× MW08 — all labeled. Cable rough-in largely complete by mid-afternoon. Joseph flagged AP relocation requests (accessibility). Chris approved moves up to 5ft in same area. <strong>EOD AP hang count NOT confirmed.</strong></div>
+          <div class="timeline-author">Chris Thom · #deployments</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-yellow"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 18 — Open Blockers (End of Day)</div>
+          <div class="timeline-text">🟡 EOD AP hang count unconfirmed · 🟡 AP relocation callouts not documented · 🟡 Cutover originally set for Mon 3/23 PM (later moved to 3/24 AM)</div>
+          <div class="timeline-author">Chris Thom · Passed to Jam (Shift 2)</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 17, 2026 — McKinley Multi-Site Cabling Day</div>
+          <div class="timeline-text">Joseph Petit (Aria + 5757 5 Flags), Yoandrys Gonzales (2520 Conway, 3312 Semoran). FW WAN0 was ready for ISP patch-in at 5757 site (confirmed). Aria (this site) — AP01 run issues discussed.</div>
+          <div class="timeline-author">Chris Thom · #deployments</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">March 9, 2026 — Equipment Delivered</div>
+          <div class="timeline-text">EO-5148 delivered via UPS 2nd Day Air (tracking: 1Z166V980218460843). All hardware on-site.</div>
+          <div class="timeline-author">Airtable Equipment Orders</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot dot-blue"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">January 27, 2026 — Mitchell Meade Assigned as JO</div>
+          <div class="timeline-text">Mitchell Meade assigned as Job Owner. Kickoff email template sent to customer (Robyn Koncelik, McKinley Companies). JP Garcia assigned Wireless Design, Alex La Fazia as DE.</div>
+          <div class="timeline-author">Deployment Threads bot · #deployments</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="card card-full">
+    <div class="card-title">Quick Links</div>
+    <div class="link-grid">
+      <a class="link-card" href="https://dashboard.meter.com/network/019cabd9-6442-23ad-f41a-14fa3ad764cd" target="_blank"><span class="link-icon">📊</span>Meter Dashboard</a>
+      <a class="link-card" href="https://docs.google.com/document/d/1ANroJFlssO8UTZKOqVAUGbZK0EwSjNWOq2dZVeIHH6Y/edit?usp=sharing" target="_blank"><span class="link-icon">📋</span>Work Order</a>
+      <a class="link-card" href="https://us.hamina.com/share/8f1c3df5-eaaa-40aa-aea0-647b17a5ae0e" target="_blank"><span class="link-icon">📐</span>Hamina Design</a>
+      <a class="link-card" href="https://app.companycam.com/projects/97914238" target="_blank"><span class="link-icon">📸</span>CompanyCam</a>
+      <a class="link-card" href="https://app.slack.com/client/TKLMU28JH/C06ADV7RR6F/thread/C06ADV7RR6F-1765379761.621129" target="_blank"><span class="link-icon">💬</span>Slack Thread</a>
+      <a class="link-card" href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/viwbnA4Rcd6Rfxfnx/recu94O9dByTECUyX" target="_blank"><span class="link-icon">🗂️</span>Airtable Record</a>
+      <a class="link-card" href="https://dashboard.meter.com/toolshed/connect/circuits" target="_blank"><span class="link-icon">🔌</span>Toolshed Circuits</a>
+      <a class="link-card" href="https://web.miniextensions.com/VE9b8H9NcmxexyDFrinX/recu94O9dByTECUyX" target="_blank"><span class="link-icon">📝</span>Update Job Status</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Site brief generated March 24, 2026 · Partner-Ops Intelligence · Sources: Airtable (Job BYTECUYX), Slack #deployments, Meter Circuits DB, Equipment Orders<br>
+    <strong style="color:var(--red)">Circuit status flagged: No ISP records found — escalate to Connect team before proceeding with cutover.</strong>
+  </div>
+
+</div>
+</body>
+</html>
