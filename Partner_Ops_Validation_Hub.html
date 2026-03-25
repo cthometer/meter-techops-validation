@@ -63,6 +63,7 @@
   .badge.cutover { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
   .badge.blocked { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
   .badge.conditional { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .badge.atrisk { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
   .progress-bar-wrap { background: var(--subtle); border-radius: 100px; height: 6px; overflow: hidden; }
   .progress-bar-fill { height: 100%; border-radius: 100px; }
   .val-meta { display: flex; gap: 12px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
@@ -133,435 +134,664 @@
     <div class="hub-title">Tech-Ops Pipeline Hub</div>
   </div>
   <div class="topbar-right">
-    <span class="refresh-time">🔄 Refreshed: March 23, 2026 @ 11:05 PM ET</span>
+    <span class="refresh-time">🔄 Refreshed: March 25, 2026 @ 6:22 AM ET</span>
   </div>
 </div>
 
 <div class="stats-bar">
   <div class="stat"><div class="stat-val green">3</div><div class="stat-lbl">Network Live</div></div>
-  <div class="stat"><div class="stat-val blue">1</div><div class="stat-lbl">Cutover In Progress</div></div>
+  <div class="stat"><div class="stat-val blue">0</div><div class="stat-lbl">Cutover In Progress</div></div>
   <div class="stat"><div class="stat-val orange">1</div><div class="stat-lbl">Blocked</div></div>
-  <div class="stat"><div class="stat-val yellow">4</div><div class="stat-lbl">Installs Today</div></div>
-  <div class="stat"><div class="stat-val accent">139</div><div class="stat-lbl">Jobs Next 30 Days</div></div>
-  <div class="stat"><div class="stat-val red">12</div><div class="stat-lbl">ISP Incomplete</div></div>
-  <div class="stat"><div class="stat-val green">2</div><div class="stat-lbl">ISP Complete Today</div></div>
+  <div class="stat"><div class="stat-val yellow">5</div><div class="stat-lbl">Installs Today</div></div>
+  <div class="stat"><div class="stat-val accent">134</div><div class="stat-lbl">Jobs Next 30 Days</div></div>
+  <div class="stat"><div class="stat-val red">15</div><div class="stat-lbl">ISP Incomplete</div></div>
+  <div class="stat"><div class="stat-val green">0</div><div class="stat-lbl">ISP Complete Today</div></div>
 </div>
 
 <div class="main">
 
+  <!-- Active Validation Checklists -->
   <div class="section">
     <div class="section-header">
       <div class="section-title">Active Validation Checklists</div>
-      <span style="font-size:12px;color:var(--muted)">Interactive — click items to mark complete · state saved in browser</span>
     </div>
     <div class="val-grid">
 
+      <!-- CentroMed — Guadalupe -->
       <div class="val-card">
         <div class="val-card-top">
-          <div><div class="val-site-name">CentroMed — Guadalupe</div><div class="val-site-sub">San Antonio, TX · Standard Install</div></div>
+          <div>
+            <div class="val-site-name">CentroMed — Guadalupe</div>
+            <div class="val-site-sub">Network Live</div>
+          </div>
           <span class="badge live">🟢 Network Live</span>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--green)">36/40 (90%)</span></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%;background:var(--green)"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%; background: var(--green);"></div></div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">36/40 items (90%)</div>
         </div>
-        <div class="val-meta"><span>👤 Zach Gruzd</span><span>📅 Live Mar 21</span><span>🔖 Phase 7 — Docs</span></div>
+        <div class="val-meta">
+          <span>👤 Zach Gruzd</span>
+          <span>📅 Live Mar 21</span>
+          <span>🔖 Phase 7 — Docs</span>
+        </div>
         <div class="open-items">
           <div class="open-item">Physical deployment quality — DE validation pending</div>
           <div class="open-item">Technician feedback — Airtable submission pending</div>
-          <div class="open-item">Detailed closeout report outstanding</div>
           <div class="open-item">Validation Release not yet posted to #deployments</div>
+          <div class="open-item">FDOB: Missing onboarding contacts, ISP data</div>
         </div>
         <div class="val-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/CentroMed_Guadalupe_Checklist.html" class="btn-open green" target="_blank">Open Checklist →</a>
-          <a href="https://docs.google.com/document/d/1XQkVZVnRyK_LCYjTgHTIaxsQ2QnCHr1HJuUSieQ32jY/edit?usp=drive_link" class="btn-open gray" target="_blank">Work Order</a>
+          <a href="#" class="btn-open blue">📋 Checklist</a>
+          <a href="#" class="btn-open gray">📄 Work Order</a>
         </div>
       </div>
 
+      <!-- Impossible Inc -->
       <div class="val-card">
         <div class="val-card-top">
-          <div><div class="val-site-name">Impossible Inc</div><div class="val-site-sub">San Francisco, CA · Standard Install</div></div>
+          <div>
+            <div class="val-site-name">Impossible Inc</div>
+            <div class="val-site-sub">Network Live</div>
+          </div>
           <span class="badge live">🟢 Network Live</span>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--green)">45/47 (96%)</span></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96%;background:var(--green)"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:98%; background: var(--green);"></div></div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">46/47 items (98%)</div>
         </div>
-        <div class="val-meta"><span>👤 Michael</span><span>📅 Live Mar 22</span><span>🔖 Phase 8 — Closeout</span></div>
+        <div class="val-meta">
+          <span>👤 Michael</span>
+          <span>📅 Live Mar 22</span>
+          <span>🔖 Phase 8 — Closeout</span>
+        </div>
         <div class="open-items">
-          <div class="open-item">Mikrotik/downstream switch — Plan B Monday</div>
-          <div class="open-item">Technician feedback pending</div>
+          <div class="open-item">Mikrotik/downstream switch — customer attempting connection independently</div>
+          <div class="open-item">Monitor for Critical/Major support ticket — Zoom remote assist ready</div>
         </div>
         <div class="val-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Impossible_Inc_Checklist.html" class="btn-open green" target="_blank">Open Checklist →</a>
+          <a href="#" class="btn-open blue">📋 Checklist</a>
         </div>
       </div>
 
+      <!-- Lahlouh — At Risk -->
       <div class="val-card">
         <div class="val-card-top">
-          <div><div class="val-site-name">Lahlouh — Burlingame</div><div class="val-site-sub">1649 Adrian Rd, Burlingame CA</div></div>
-          <span class="badge conditional">🟡 Conditional Live</span>
+          <div>
+            <div class="val-site-name">Lahlouh</div>
+            <div class="val-site-sub">At Risk</div>
+          </div>
+          <span class="badge atrisk">🔴 At Risk</span>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--yellow)">54/56 (96%)</span></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96%;background:var(--yellow)"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:96%; background: var(--red);"></div></div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">54/56 items (96%)</div>
         </div>
-        <div class="val-meta"><span>👤 Zach Gruzd</span><span>📅 Conditional Mar 21</span><span>⚠️ 2 blockers</span></div>
+        <div class="val-meta">
+          <span>👤 Zach Gruzd</span>
+          <span>📅 FDOB Mar 23</span>
+          <span>⚠️ 6 failures</span>
+        </div>
         <div class="open-items">
-          <div class="open-item">Server connectivity — Nexus switch issue (Damian/Alex)</div>
-          <div class="open-item">Client VPN / WireGuard blocker open</div>
+          <div class="open-item">WAN stability — 37 events in 2h, 45 devices disconnected</div>
+          <div class="open-item">IPsec tunnels: 0/3 up — critical</div>
+          <div class="open-item">2 open issues in Dashboard</div>
+          <div class="open-item">Missing: ISP circuit data, deployment thread, Hamina link</div>
         </div>
         <div class="val-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Lahlouh_Burlingame_Checklist.html" class="btn-open blue" target="_blank">Open Checklist →</a>
+          <a href="#" class="btn-open blue">📋 Checklist</a>
         </div>
       </div>
 
+      <!-- Solesence — Network Live -->
       <div class="val-card">
         <div class="val-card-top">
-          <div><div class="val-site-name">Solesence — Bolingbrook</div><div class="val-site-sub">Bolingbrook, IL · IPsec Cutover</div></div>
-          <span class="badge cutover">🔵 Cutover In Progress</span>
+          <div>
+            <div class="val-site-name">Solesence</div>
+            <div class="val-site-sub">Network Live</div>
+          </div>
+          <span class="badge live">🟢 Network Live</span>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Confirmed Items</span><span style="font-weight:700;color:var(--blue)">38/128 confirmed</span></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%;background:var(--blue)"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:61%; background: var(--green);"></div></div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">78/128 Confirmed Items (61%)</div>
         </div>
-        <div class="val-meta"><span>👤 Alex La Fazia</span><span>📅 Cutover Mar 21 @ 8AM CT</span><span>🔗 IPsec ✓ AutoVPN ✓</span></div>
+        <div class="val-meta">
+          <span>👤 Alex La Fazia</span>
+          <span>📅 Live Mar 21</span>
+          <span>🔗 IPsec ✓</span>
+          <span>✓ AutoVPN ✓</span>
+        </div>
         <div class="open-items">
-          <div class="open-item">Post-cutover validation running</div>
-          <div class="open-item">VLAN 12/13/14 access confirmation pending</div>
+          <div class="open-item">Post-cutover validation complete — IPsec + AutoVPN confirmed</div>
+          <div class="open-item">VLAN 12/13/14 access verified ✓</div>
+          <div class="open-item">Ongoing: Client VPN testing with Isaac</div>
         </div>
         <div class="val-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Bolingbrook_Cutover_Checklist.html" class="btn-open blue" target="_blank">Open Checklist →</a>
+          <a href="#" class="btn-open blue">📋 Checklist</a>
         </div>
       </div>
 
+      <!-- Shack Properties — Asheville -->
       <div class="val-card">
         <div class="val-card-top">
-          <div><div class="val-site-name">Shack Properties — Asheville</div><div class="val-site-sub">105 Fairview Rd, Asheville NC</div></div>
+          <div>
+            <div class="val-site-name">Shack Properties — Asheville</div>
+            <div class="val-site-sub">Blocked</div>
+          </div>
           <span class="badge blocked">🔴 Blocked</span>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;"><span>Validation Progress</span><span style="font-weight:700;color:var(--red)">11/26 (42%)</span></div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:42%;background:var(--red)"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:58%; background: var(--red);"></div></div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">15/26 items (58%)</div>
         </div>
-        <div class="val-meta"><span>👤 DE Unassigned</span><span>📦 SFPs: Mon 10:30 AM</span></div>
+        <div class="val-meta">
+          <span>👤 DE Unassigned</span>
+          <span>📦 SFPs: Received ✓</span>
+        </div>
         <div class="open-items">
-          <div class="open-item">SFPs arriving Mon Mar 23 (UPS 1Z166V980123359106)</div>
-          <div class="open-item">Backup MC06 not shipped — device shortage</div>
+          <div class="open-item">SFPs received Mar 23 ✓ — IDF connection pending</div>
+          <div class="open-item">Backup MC06 blocked — HA Pause policy (Pike Hughes)</div>
           <div class="open-item">AP05, AP08 offline · AP07 removed (painting)</div>
         </div>
         <div class="val-actions">
-          <a href="https://cthometer.github.io/meter-techops-validation/Shack_Properties_Asheville_Checklist.html" class="btn-open orange" target="_blank">Open Checklist →</a>
+          <a href="#" class="btn-open blue">📋 Checklist</a>
+        </div>
+      </div>
+
+      <!-- Rally House — Georgetown (NEW) -->
+      <div class="val-card">
+        <div class="val-card-top">
+          <div>
+            <div class="val-site-name">Rally House — Georgetown</div>
+            <div class="val-site-sub">1013 W University Ave, Georgetown TX</div>
+          </div>
+          <span class="badge cutover">🔵 Cutover In Progress</span>
+        </div>
+        <div>
+          <div class="readiness-row">
+            <span class="pill warn">Phase 1 — Install</span>
+          </div>
+        </div>
+        <div class="val-meta">
+          <span>👤 Ivan Casllas</span>
+          <span>📅 Cutover Mar 26</span>
+          <span>🔧 AP Install Today</span>
+        </div>
+        <div class="open-items">
+          <div class="open-item">APs not installed Day 1 (no lift) — lift arriving today</div>
+          <div class="open-item">CompanyCam: 0/15 notes — no documentation submitted</div>
+          <div class="open-item">Circuit: Optimum Coax 200/35 Mbps — Connected ✓</div>
+        </div>
+        <div class="val-actions">
+          <button class="btn-open blue" onclick="copyPrompt('Run field validation for Rally House Georgetown \u2014 1013 W University Ave Suite 225, Georgetown TX. Cutover Mar 26. Check AP install status, circuit Optimum coax, CompanyCam progress.')">🚀 Field Validation</button>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- PIPELINE -->
+  <!-- Pipeline -->
   <div class="section">
     <div class="section-header">
-      <div class="section-title">Upcoming Pipeline — Next 7 Days</div>
-      <span style="font-size:12px;color:var(--muted)">Live from Airtable · 139 jobs next 30 days · Click "Copy Briefing Prompt" → paste into Cowork</span>
+      <div class="section-title">Upcoming Pipeline (Next 30 Days)</div>
     </div>
 
+    <!-- Wednesday March 25 — TODAY -->
     <div class="day-group">
-      <div class="day-label">Monday March 23 <span class="today-pill">TODAY</span></div>
+      <div class="day-label">
+        Wednesday, March 25
+        <span class="today-pill">TODAY</span>
+      </div>
       <div class="pipe-grid">
-
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Swap Install</div><div class="pipe-site-sub">Job #BYTECUYX · Mitch Meade JO</div></div>
+            <div>
+              <div class="pipe-site">McKinley (×2) — Orlando Swaps</div>
+              <div class="pipe-site-sub">4700 Cason Cove Dr + 4618 Middlebrook Rd</div>
+            </div>
             <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Patch-In Incomplete</span>
+          <div class="pipe-team">
+            <span>👤 Dan Cano + Joseph Petit</span>
+            <span>📋 Mitch Meade JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 Joseph Petit</span><span>👤 JO: Mitch Meade</span></div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job BYTECUYX — Swap, Joseph Petit, March 23, Mitch Meade JO. Check circuit status, port map, and readiness.')">📋 Copy Briefing Prompt</button>
-            <a href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/recu94O9dByTECUyX" class="btn-sm" target="_blank">Airtable ↗</a>
+            <a href="https://docs.google.com/document/d/1zlOgNpIdvEVLtUvzJZdLDjtsnO9qlPI10EWDFmJM88U/edit?tab=t.0" class="btn-sm primary">📄 WO 1</a>
+            <a href="https://docs.google.com/document/d/1TUudZTEqm1tm6lx9Z7I4ur0amBDyAWvR_CDsp8pmGH4/edit?tab=t.0" class="btn-sm primary">📄 WO 2</a>
           </div>
         </div>
 
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard Install</div><div class="pipe-site-sub">Job #NLUT53H9 · Kris Capanpan JO</div></div>
-            <span class="job-type-badge jt-standard">Standard</span>
+            <div>
+              <div class="pipe-site">Park Pictures — Santa Monica</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill ok"><span class="dot"></span>ISP Patch-In Complete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          <div class="pipe-team">
+            <span>👤 Joseph Adams, Julian Gomez</span>
+            <span>📋 Koosha Seyvani JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 David Grantham</span><span>👤 JO: Kris Capanpan</span></div>
+          <div class="notes-box">After-hours cutover possible 5 PM PDT Fri 3/27</div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job NLUT53H9 — Standard install, David Grantham, March 23, Kris Capanpan JO. Check circuit status, port map, and readiness.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1P_IBiYgBYtuu7DOxeoXuXIUzimQkrSegfAdNBPHSFyA/edit?usp=sharing" class="btn-sm success" target="_blank">Work Order ↗</a>
+            <a href="https://docs.google.com/document/d/1270wDkEwO5KEtr4fxKkioYlFkTbwPMnP7cMam2A_zbc/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
           </div>
         </div>
 
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard Install — Premium ⭐</div><div class="pipe-site-sub">Job #3HJSRGDX · Christian Diaz JO</div></div>
-            <span class="job-type-badge jt-standard">Standard</span>
+            <div>
+              <div class="pipe-site">McKinley — 5974 Windhover Dr</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill ok"><span class="dot"></span>ISP Patch-In Complete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          <div class="pipe-team">
+            <span>👤 Dan Cano</span>
+            <span>📋 Mitch Meade JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 Christian Malcolm</span><span>👤 JO: Christian Diaz</span></div>
-          <div class="notes-box">Premium, Meter ops-led. Suites still under construction — coordinate during kickoff call.</div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job 3HJSRGDX — Premium standard install, Christian Malcolm, March 23, Christian Diaz JO. Meter ops-led, some suites under construction.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/181NAYZu_weJsrPeqfQ3Alg53-M4a0ke9fOn6uy6QeFw/edit?usp=sharing" class="btn-sm success" target="_blank">Work Order ↗</a>
+            <a href="https://docs.google.com/document/d/1nkiTvCAKSDwTGQVnw-b925__YfEeD8bkOjoDLIdefvc/edit?tab=t.0" class="btn-sm primary">📄 Work Order</a>
           </div>
         </div>
 
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Reactivation</div><div class="pipe-site-sub">Job #K7BYHROJ · Marianna Mao JO</div></div>
-            <span class="job-type-badge jt-reactivation">Reactivation</span>
+            <div>
+              <div class="pipe-site">CentroMed — 5255 Walzem Rd</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill warn"><span class="dot"></span>ISP by Customer</span>
-            <span class="pill fail"><span class="dot"></span>No WO</span>
+          <div class="pipe-team">
+            <span>👤 Ramon Rendon</span>
+            <span>📋 Sudarsshan Krishna JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👤 JO: Marianna Mao</span></div>
-          <div class="notes-box">Pre-installed space. ISP procured by customer and already in place.</div>
+          <div class="notes-box">Tonight 5:30 PM CT</div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job K7BYHROJ — Reactivation, March 23, Marianna Mao JO. Pre-installed space, ISP by customer.')">📋 Copy Briefing Prompt</button>
-            <a href="https://airtable.com/appBiFV0UMVIdMTg2/tblxWPU9HnEMhFQbR/recxvyqTmK7byhROJ" class="btn-sm" target="_blank">Airtable ↗</a>
+            <a href="https://docs.google.com/document/d/1DBsN3sfSBo61UMvQDwpAOYeT15SVzEXpLixD9P4khyw/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
           </div>
         </div>
-
       </div>
     </div>
 
+    <!-- Thursday March 26 -->
     <div class="day-group">
-      <div class="day-label">Tuesday March 24</div>
+      <div class="day-label">Thursday, March 26</div>
       <div class="pipe-grid">
-
-        <div class="pipe-card live-card">
+        <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Swap Install <span class="live-banner"><span class="live-dot"></span>LIVE</span></div><div class="pipe-site-sub">Job #PH6BPIVO · Mitch Meade JO</div></div>
-            <span class="job-type-badge jt-swap">Swap</span>
+            <div>
+              <div class="pipe-site">Allergy Partners — Asheville DC</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill ok"><span class="dot"></span>ISP Complete</span>
-            <span class="pill ok"><span class="dot"></span>Network Live ✓</span>
+          <div class="pipe-team">
+            <span>👤 Donny Simuel</span>
+            <span>📋 Sudarsshan Krishna JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 Yoandrys Gonzales</span><span>👤 JO: Mitch Meade</span></div>
+          <div class="notes-box">Data Center Hub deploy 9 AM EST with WWT</div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Run field validation for Job PH6BPIVO — Swap, Yoandrys Gonzales, Mitch Meade JO. Network is live — generate post-cutover validation checklist.')">📋 Generate Validation</button>
-            <a href="https://docs.google.com/document/d/1LcIWiwZu3Ky3jhKEngrdF2tAOq8NWjrtSuk6ulmHARs/edit?tab=t.0" class="btn-sm success" target="_blank">Work Order ↗</a>
+            <a href="https://docs.google.com/document/d/1qRd-QDxlAssaYd_TGzRhbWKC_z8FUaZ4ouRmUgZfeeo/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
           </div>
         </div>
 
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Swap Install</div><div class="pipe-site-sub">Job #RT6EEGCU · Mitch Meade JO</div></div>
+            <div>
+              <div class="pipe-site">McKinley (×3) — Orlando Swaps</div>
+              <div class="pipe-site-sub">4708 Olive Branch + 4822 Cason Cove + 4771 Walden Circle</div>
+            </div>
             <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
+          <div class="pipe-team">
+            <span>👤 Dan Cano, Yoandrys Gonzales</span>
+            <span>📋 Mitch Meade JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 Yoandrys Gonzales</span><span>👤 JO: Mitch Meade</span></div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job RT6EEGCU — Swap, Yoandrys Gonzales, March 24, Mitch Meade JO.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1P3ega7PpEPvB1GYwGQYu3eDnAi0JInDeaduk3CgWpqg/edit?usp=sharing" class="btn-sm success" target="_blank">Work Order ↗</a>
+            <a href="#" class="btn-sm gray">📄 Work Orders</a>
           </div>
         </div>
 
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Pre-Install (×3 sites)</div><div class="pipe-site-sub">Jobs VIFHPC52 / RMGLDQVQ / 3PMDNBSG · Marianna Mao JO</div></div>
-            <span class="job-type-badge jt-preinstall">Pre-Install</span>
+            <div>
+              <div class="pipe-site">Breakthrough Properties — Boulder</div>
+              <div class="pipe-site-sub">1745 38th St Suite 102</div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete ×3</span>
+          <div class="pipe-team">
+            <span>👤 Jay Leary</span>
+            <span>📋 Juan Lopera JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👤 JO: Marianna Mao</span></div>
-          <div class="notes-box">⚠️ Three pre-install jobs due 3/24. All circuit patch-ins incomplete — flag circuit team for follow-up.</div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Jobs VIFHPC52, RMGLDQVQ, 3PMDNBSG — Pre-installs, March 24, Marianna Mao JO. Check circuit status for all three sites and flag any blockers.')">📋 Copy Briefing Prompt</button>
+            <a href="#" class="btn-sm gray">📄 Work Order</a>
           </div>
         </div>
 
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Abridge — San Francisco</div>
+              <div class="pipe-site-sub">208 Utah St Floors 1,2,3</div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 (no tech assigned)</span>
+            <span>📋 Sudarsshan JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1XaD8TyS6rrdZV9JLYv-OPQ0qSLbu_I6S_uNGR76hSqQ/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Fanatics — Seattle</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Jesse Valenzuela, Trevor Romine</span>
+            <span>📋 Alice Huff JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1lCB1_1a5i4qELFtaS9UhbW7Bv20P9Ma97q9sLLZlqNA/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">CentroMed — 9135 Schaefer Rd</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Ramon Rendon</span>
+            <span>📋 Sudarsshan JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="notes-box">Tonight 5:30 PM CT</div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1dGd-TbDJd8oAcXF0X_iO9ejztZH0gUfurBvbW49MbIg/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Graduation Alliance — North Miami Beach</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Orsman Cabrera</span>
+            <span>📋 Koosha JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1YH-Bene5lsT3aVftMbGhNfFfWIRuKIfQIWoSD1NxEHI/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Friday March 27 -->
     <div class="day-group">
-      <div class="day-label">Wednesday–Friday March 25–27</div>
+      <div class="day-label">Friday, March 27</div>
       <div class="pipe-grid">
-
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard Install — Premium</div><div class="pipe-site-sub">Job #T7WIPNWI · Christian Diaz JO · Mar 25</div></div>
-            <span class="job-type-badge jt-standard">Standard</span>
-          </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
-          </div>
-          <div class="pipe-team"><span>👷 Matthew Valdes</span><span>👤 JO: Christian Diaz</span></div>
-          <div class="notes-box">No partner. Premium deal.</div>
-          <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job T7WIPNWI — Premium standard install, Matthew Valdes, March 25, Christian Diaz JO. No partner.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1q3yv-SDeq2GlU6YbWjikFzjIOO79iHy9jgpKYfaKTIk/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
-          </div>
-        </div>
-
-        <div class="pipe-card">
-          <div class="pipe-card-header">
-            <div><div class="pipe-site">🇬🇧 New Build — Milton Keynes</div><div class="pipe-site-sub">33 Alston Dr, MK13 9HA · Kris Capanpan JO · Mar 27</div></div>
-            <span class="job-type-badge jt-newbuild">New Build</span>
-          </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill warn"><span class="dot"></span>UK Timezone</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
-          </div>
-          <div class="pipe-team"><span>👷 Dan Tuttle</span><span>👤 JO: Kris Capanpan</span></div>
-          <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job UFYY1HAK — New Build, 33 Alston Drive Milton Keynes MK13 9HA UK, Dan Tuttle, March 27, Kris Capanpan JO. UK timezone coordination required.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1UaIMg97pcyRRNhkTcQRsWieGnsn-OkVOsHrOGvgX1ZM/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
-          </div>
-        </div>
-
-        <div class="pipe-card">
-          <div class="pipe-card-header">
-            <div><div class="pipe-site">🇬🇧 New Build — Nottingham</div><div class="pipe-site-sub">1 Thoroton St, NG7 4EW · Kris Capanpan JO · Mar 27</div></div>
-            <span class="job-type-badge jt-newbuild">New Build</span>
-          </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill warn"><span class="dot"></span>UK Timezone</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
-          </div>
-          <div class="pipe-team"><span>👷 Dan Tuttle</span><span>👤 JO: Kris Capanpan</span></div>
-          <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job D6SS8YSH — New Build, 1 Thoroton Street Nottingham NG7 4EW UK, Dan Tuttle, March 27, Kris Capanpan JO.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/14HQSBZXLFqLRz5RZMj_lxRiKCvObzXhPe_UbmEGn9dc/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
-          </div>
-        </div>
-
-        <div class="pipe-card">
-          <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard (×3) — Lawrence/Pittsburg/Edmond</div><div class="pipe-site-sub">KS + OK · Liam Weld JO · Mar 27</div></div>
-            <span class="job-type-badge jt-standard">Standard</span>
-          </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete ×3</span>
-          </div>
-          <div class="pipe-team"><span>👤 JO: Liam Weld</span></div>
-          <div class="notes-box">3312 Clinton Pkwy Lawrence KS · 1102 S Rouse St Pittsburg KS · 825 S Kelley Ave Edmond OK</div>
-          <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Jobs 55K5EYEB, 9BZCAT7C, EWQVYYJA, DSYSLAS9 — Multi-site standard installs, Liam Weld JO, March 27. Lawrence KS, Pittsburg KS, Edmond OK. Check circuits for all.')">📋 Copy Briefing Prompt</button>
-          </div>
-        </div>
-
-        <div class="pipe-card">
-          <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard — Zach Gruzd</div><div class="pipe-site-sub">Job #Y5Z0EDGA · Christian Diaz JO · Mar 27</div></div>
-            <span class="job-type-badge jt-standard">Standard</span>
-          </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
-          </div>
-          <div class="pipe-team"><span>👷 Zach Gruzd</span><span>👤 JO: Christian Diaz</span></div>
-          <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job Y5Z0EDGA — Standard install, Zach Gruzd, March 27, Christian Diaz JO.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1HR4zwDWOTvEP6PPE4RwccpmEFlzg3jw1EeH-TicjXlw/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
-          </div>
-        </div>
-
-        <div class="pipe-card">
-          <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard — Brian Jones</div><div class="pipe-site-sub">Job #KCW2VXGY · Sudarsshan Krishna JO · Mar 27</div></div>
-            <span class="job-type-badge jt-standard">Standard</span>
-          </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
-          </div>
-          <div class="pipe-team"><span>👷 Brian Jones</span><span>👤 JO: Sudarsshan Krishna</span></div>
-          <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job KCW2VXGY — Standard install, Brian Jones, March 27, Sudarsshan Krishna JO.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1-_rGjMr1M9Ankpy5MHJU8Pftec-lIpjaY9-RvuosmSg/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="day-group">
-      <div class="day-label">Monday March 30</div>
-      <div class="pipe-grid">
-
-        <div class="pipe-card">
-          <div class="pipe-card-header">
-            <div><div class="pipe-site">Swap — CentroMed San Antonio</div><div class="pipe-site-sub">6315 S Zarzamora St, San Antonio TX</div></div>
+            <div>
+              <div class="pipe-site">McKinley (×3) — Orlando Swaps</div>
+              <div class="pipe-site-sub">4601 + 4860 + 4401 S Kirkman area</div>
+            </div>
             <span class="job-type-badge jt-swap">Swap</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          <div class="pipe-team">
+            <span>👤 Yoandrys Gonzales, Dan Cano</span>
+            <span>📋 Mitch Meade JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 Ramon Rendon</span><span>👤 JO: Sudarsshan Krishna</span></div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job QJQ5KNKJ — Swap at CentroMed 6315 S Zarzamora San Antonio TX, Ramon Rendon, March 30, Sudarsshan JO.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/18XbiIwT_HUTLJVneL1OyZxAbxP7in9_QyjaG61UYobw/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+            <a href="#" class="btn-sm gray">📄 Work Orders</a>
           </div>
         </div>
 
         <div class="pipe-card">
           <div class="pipe-card-header">
-            <div><div class="pipe-site">Standard — Aaru New Office (rebooking)</div><div class="pipe-site-sub">Job #HENIYXTA · Andrea Vezeau JO · Mar 27</div></div>
+            <div>
+              <div class="pipe-site">CentroMed — 5542 Walzem Rd</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Ramon Rendon</span>
+            <span>📋 Sudarsshan JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="notes-box">Cha PTO — coverage needed</div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1K_AwmiB328Iodgx39XJpXzWVmgwlCbko4Cc9xsBIhmY/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monday March 30 -->
+    <div class="day-group">
+      <div class="day-label">Monday, March 30</div>
+      <div class="pipe-grid">
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Allergy Partners — Clyde (Spoke)</div>
+              <div class="pipe-site-sub"></div>
+            </div>
             <span class="job-type-badge jt-standard">Standard</span>
           </div>
-          <div class="readiness-row">
-            <span class="pill fail"><span class="dot"></span>ISP Incomplete</span>
-            <span class="pill ok"><span class="dot"></span>WO Available</span>
+          <div class="pipe-team">
+            <span>👤 Brian Jones</span>
+            <span>📋 Sudarsshan JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
           </div>
-          <div class="pipe-team"><span>👷 Anthony Derin</span><span>👤 JO: Andrea Vezeau</span></div>
-          <div class="notes-box">Rebooking from original Aaru project.</div>
+          <div class="notes-box">Cabling 10:30 AM, Cutover 5 PM EST</div>
           <div class="pipe-actions">
-            <button class="btn-sm primary" onclick="copyPrompt('Pull site brief for Job HENIYXTA — Standard install, Aaru new office rebooking, Anthony Derin, Andrea Vezeau JO.')">📋 Copy Briefing Prompt</button>
-            <a href="https://docs.google.com/document/d/1qIn8jgcwEdFgNLF7jZ3b08tz0Ajqwy4rzThzdCaw8d0/edit?usp=sharing" class="btn-sm success" target="_blank">WO ↗</a>
+            <a href="https://docs.google.com/document/d/1-_rGjMr1M9Ankpy5MHJU8Pftec-lIpjaY9-RvuosmSg/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
           </div>
         </div>
 
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Paradigm — San Francisco</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 (no tech)</span>
+            <span>📋 Andrea Vezeau JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1Eqjj026B7R2qZ0b74uVkRBY18kL9vSH6vyE_eHNH08w/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Flapping Airplanes — San Francisco</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Shannon Soto</span>
+            <span>📋 Andrea Vezeau JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/16ZLZw3BNy_NCfBhilOiZpf6Xk8PKTHWb30_SwBwkBDk/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">United Salad — Bend OR</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 (no tech)</span>
+            <span>📋 Alice Huff JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1HTX7_0dBduh9HgReuYDPrIUK6GxLgsuGakWeG6Q3wJE/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Faherty Brand — Laguna Beach</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 (no tech)</span>
+            <span>📋 Juan Lopera JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1CMvExC7KXaJIVcObZhe7_XGdEw3JvOZxM0BRxUKSnsE/edit?tab=t.0" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Tuesday March 31 -->
+    <div class="day-group">
+      <div class="day-label">Tuesday, March 31</div>
+      <div class="pipe-grid">
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">Aaru — New York</div>
+              <div class="pipe-site-sub"></div>
+            </div>
+            <span class="job-type-badge jt-standard">Standard</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Brian Jones</span>
+            <span>📋 Andrea Vezeau JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1qIn8jgcwEdFgNLF7jZ3b08tz0Ajqwy4rzThzdCaw8d0/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wednesday April 1 -->
+    <div class="day-group">
+      <div class="day-label">Wednesday, April 1</div>
+      <div class="pipe-grid">
+        <div class="pipe-card">
+          <div class="pipe-card-header">
+            <div>
+              <div class="pipe-site">CentroMed — Schertz</div>
+              <div class="pipe-site-sub">17323 Interstate 35 N, Schertz TX</div>
+            </div>
+            <span class="job-type-badge jt-swap">Swap</span>
+          </div>
+          <div class="pipe-team">
+            <span>👤 Ramon Rendon</span>
+            <span>📋 Sudarsshan JO</span>
+            <span style="color: var(--red);">⚠️ ISP Incomplete</span>
+          </div>
+          <div class="pipe-actions">
+            <a href="https://docs.google.com/document/d/1vkrGwSrhjX-rFRyjJe7j6uJ_0aueMCVZDe0bq48H2Jc/edit?usp=sharing" class="btn-sm primary">📄 Work Order</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- HOW TO USE -->
+  <!-- Site Intelligence Workflow -->
   <div class="section">
-    <div class="section-header"><div class="section-title">Site Intelligence Workflow</div></div>
+    <div class="section-header">
+      <div class="section-title">Site Intelligence Workflow</div>
+    </div>
     <div class="how-to-box">
       <div class="how-to-col">
-        <h4>🚀 Generate a Site Briefing Packet</h4>
-        <div class="how-step"><div class="step-num">1</div><div>Click <strong>"Copy Briefing Prompt"</strong> on any site card — copies a pre-filled query to clipboard.</div></div>
-        <div class="how-step"><div class="step-num">2</div><div>Open <strong>Cowork (Claude)</strong> and paste the prompt. No additional setup needed.</div></div>
-        <div class="how-step"><div class="step-num">3</div><div>Claude searches Airtable, Slack, Intercom, and Google Drive, then generates a full briefing packet with circuit status, port map links, tech contacts, and a readiness score.</div></div>
-        <div class="how-step"><div class="step-num">4</div><div>The briefing is pushed to GitHub Pages and a shareable link is returned.</div></div>
+        <h4>For Field Teams</h4>
+        <div class="how-step">
+          <div class="step-num">1</div>
+          <div>Run field validation</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">2</div>
+          <div>Provide real-time feedback</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">3</div>
+          <div>Link evidence (CompanyCam, Dashboard)</div>
+        </div>
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted);">
+          <strong>Pro Tip:</strong> Copy the validation prompt below and paste it into your Slack #techops channel or use it with Claude directly.
+        </div>
+        <div class="prompt-box" id="promptBox">Run field validation for [Site Name] — [Address]. Status: [Current Phase]. Check circuit connectivity, device status, and documentation progress. Link evidence in #deployments.</div>
+        <button class="copy-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
       </div>
       <div class="how-to-col">
-        <h4>🔍 Query Any Site Directly</h4>
-        <div style="font-size:13px;margin-bottom:8px;">Open Cowork and use any of these prompts:</div>
-        <div class="prompt-box">Pull site brief for [Customer / Address / Job ID]
-
-Run field validation for [Site Name]
-
-Show me all ISP blockers this week
-
-What sites are active today?
-
-Refresh the pipeline hub
-
-Check circuit status for [Job ID]</div>
-        <div style="margin-top:12px;font-size:12px;color:var(--muted);">💡 <strong>Tip:</strong> Claude also pulls port map links from the Work Order (Rack Elevation & Patch Panel Layout field) and flags if circuit fulfillment is missing so you can reach out to the circuit team proactively.</div>
+        <h4>For Operations</h4>
+        <div class="how-step">
+          <div class="step-num">1</div>
+          <div>Monitor validation status</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">2</div>
+          <div>Triage blockers in real-time</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">3</div>
+          <div>Update ISP/circuit status</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">4</div>
+          <div>Clear to cutover</div>
+        </div>
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted);">
+          <strong>Updates:</strong> Refresh this hub every 2 hours during active cutover windows. Check #deployments for real-time field status.
+        </div>
       </div>
     </div>
   </div>
@@ -569,31 +799,28 @@ Check circuit status for [Job ID]</div>
 </div>
 
 <script>
-function copyPrompt(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-  } else {
-    fallbackCopy(text);
-  }
-  // Visual feedback on all primary buttons
-  document.querySelectorAll('.btn-sm.primary').forEach(btn => {
-    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(text.substring(0, 25).replace(/['"]/g, ''))) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Copied to clipboard!';
-      btn.style.background = 'rgba(34,197,94,0.2)';
-      btn.style.borderColor = 'rgba(34,197,94,0.5)';
-      btn.style.color = 'var(--green)';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.cssText = ''; }, 2200);
-    }
-  });
+function copyPrompt(customPrompt) {
+  const text = customPrompt || document.getElementById('promptBox').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    event.target.innerText = '✓ Copied!';
+    event.target.classList.add('copied');
+    setTimeout(() => {
+      event.target.innerText = '📋 Copy Prompt';
+      event.target.classList.remove('copied');
+    }, 2000);
+  }).catch(fallbackCopy);
 }
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); } catch(e) {}
-  document.body.removeChild(ta);
+
+function fallbackCopy() {
+  const box = document.getElementById('promptBox');
+  const range = document.createRange();
+  range.selectNodeContents(box);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  document.execCommand('copy');
 }
 </script>
+
 </body>
 </html>
